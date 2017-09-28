@@ -1,0 +1,8 @@
+target/
+psql.properties
+.idea/
+*.iml
+output.log
+*.csv
+out/
+.DS_Store
