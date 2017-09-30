@@ -1,5 +1,6 @@
-package Game1;
+package Survive;
 
+import Survive.Utils.GameCoordinate;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
@@ -8,20 +9,17 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-import java.awt.Font;
-import java.io.InputStream;
 
-
-public class Main1 {
+public class Runner {
     public static long window;
     public static MainCharacter mc;
     public static Barriers barriers;
-    public static Enemies enemies;
+    //public static Enemies enemies;
 
     public static void main(String[] args) {
         mc = new MainCharacter();
         barriers = new Barriers();
-        enemies = new Enemies();
+        //enemies = new Enemies();
 
         try {
             initGLFW();
@@ -55,7 +53,7 @@ public class Main1 {
             }
             else{
                 //pass key and action to barriers' movement method
-                barriers.checkInput(key, action);
+                mc.checkInput(key, action);
             }
         });
 
@@ -87,12 +85,12 @@ public class Main1 {
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             glfwPollEvents();
-            barriers.move();
-            barriers.update();
-            barriers.render();
-            enemies.update(mc.getX(), mc.getY());
-            enemies.render();
+            barriers.update(mc.getCoords());
+            barriers.render(mc.getAreaQuad());
+            //enemies.update(mc.getX(), mc.getY());
+            //enemies.render();
             mc.render();
+            mc.move();
             glfwSwapBuffers(window); // swap the color buffers
         }
     }

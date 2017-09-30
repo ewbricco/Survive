@@ -1,7 +1,8 @@
-package Game1;
+package Survive;
+
+import Survive.Utils.Color;
 
 import java.util.ArrayList;
-import java.util.IntSummaryStatistics;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glEnd;

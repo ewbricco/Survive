@@ -1,4 +1,4 @@
-package Game1;
+package Survive;
 
 import java.util.Random;
 

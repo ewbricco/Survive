@@ -1,4 +1,8 @@
-package Game1;
+package Survive.Utils;
+
+import Survive.GameState;
+
+import static org.lwjgl.opengl.GL11.glColor3f;
 
 /**
  * Created by ebricco on 6/26/16.
@@ -98,5 +102,9 @@ public class Color {
         color.green = 1 - color.green;
         color.blue = 1 - color.blue;
         return color;
+    }
+
+    public void setColor() {
+        glColor3f(red, green, blue);
     }
 }
