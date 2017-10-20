@@ -1,4 +1,4 @@
-package Survive.Utils;
+package main.eastin.Survive.Utils;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glEnd;

@@ -1,6 +1,6 @@
-package Survive;
+package main.eastin.Survive;
 
-import Survive.Utils.*;
+import main.eastin.Survive.Utils.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 

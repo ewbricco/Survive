@@ -1,4 +1,4 @@
-package Survive.Utils;
+package main.eastin.Survive.Utils;
 
 /**
  * Created by ebricco on 11/29/16.

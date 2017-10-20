@@ -1,6 +1,6 @@
-package Survive;
+package main.eastin.Survive;
 
-import Survive.Utils.Color;
+import main.eastin.Survive.Utils.Color;
 
 import java.util.ArrayList;
 

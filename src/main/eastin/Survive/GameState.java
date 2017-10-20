@@ -1,4 +1,4 @@
-package Survive;
+package main.eastin.Survive;
 
 import java.util.Random;
 

@@ -1,6 +1,5 @@
-package Survive;
+package main.eastin.Survive;
 
-import Survive.Utils.GameCoordinate;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
