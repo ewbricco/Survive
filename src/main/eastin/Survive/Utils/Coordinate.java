@@ -32,6 +32,20 @@ public class Coordinate {
         return Math.pow((double)(xdiff+ydiff), .5d);
     }
 
+    //updates coordinate to be closer to the target in both x and y by distance
+    public void seek(Coordinate target, int distance) {
+        if (target.getX() < x) {
+            x -= distance;
+        } else {
+            x += distance;
+        }
+        if (target.getY() < y) {
+            y -= distance;
+        } else {
+            y += distance;
+        }
+    }
+
     public int getX() {
         return x;
     }

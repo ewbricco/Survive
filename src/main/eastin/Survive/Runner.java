@@ -85,7 +85,7 @@ public class Runner {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             glfwPollEvents();
             barriers.update(mc.getCoords());
-            barriers.render(mc.getAreaQuad());
+            barriers.render();
             enemies.update(mc.getCoords());
             enemies.render();
             mc.render();

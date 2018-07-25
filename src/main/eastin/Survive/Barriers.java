@@ -3,6 +3,7 @@ package main.eastin.Survive;
 import main.eastin.Survive.Utils.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,49 +13,16 @@ import java.util.Map;
  * when a barrier is in the screen range (x: 0-2560, y: 0-1600)
  */
 public class Barriers {
-    public ArrayList<Coordinate> coords;
-    public ArrayList<Integer> size;
-    private ArrayList<Color> color;
-    private ArrayList<Integer> toRender;
-    //public int uncalculatedNorth;
-    //public int uncalculatedWest;
-    //public int uncalculatedSouth;
-    //public int uncalculatedEast;
+
+    public List<SquareObject> objects;
 
     private AreaQuad frontier;
 
     final double PERCENTCOVERAGE = .05d;
 
-
     public Barriers() {
-        coords = new ArrayList();
-        size = new ArrayList();
-        color = new ArrayList();
-        toRender = new ArrayList();
-
+        objects = new ArrayList<>();
         frontier = new AreaQuad(GameState.HEIGHT/4, -GameState.HEIGHT/4, -GameState.WIDTH/4, GameState.WIDTH/4);
-    }
-
-    public void render(AreaQuad screen) {
-        checkPosition(screen);
-        for (int j = 0; j < toRender.size(); j++) {
-            int i = toRender.get(j);
-            RenderUtils.renderQuad(Coordinate.Difference(coords.get(i), screen.getBottomLeft()), size.get(i), size.get(i), color.get(i));
-        }
-    }
-
-    //find all barriers that are in the given coordinate area
-    private void checkPosition(AreaQuad screen) {
-        toRender = new ArrayList();
-        for (int i = 0; i < coords.size(); i++) {
-            if (coords.get(i).getX() + size.get(i) < screen.getWesternFrontier() || coords.get(i).getX() - size.get(i) > screen.getEasternFrontier()) {
-                continue;
-            }
-            if (coords.get(i).getY() + size.get(i) < screen.getSouthernFrontier() || coords.get(i).getY() - size.get(i) > screen.getNorthernFrontier()) {
-                continue;
-            }
-            toRender.add(i);
-        }
     }
 
     //TODO: note that if barriers ever become permanent, there is a performance concern with how the spawn area is expanded
@@ -62,6 +30,12 @@ public class Barriers {
     public void update(GameCoordinate center) {
         //check which frontiers are too close to the game center
         modifyFrontiers(center, frontier.getDistancesToPoint(center));
+    }
+
+    public void render() {
+        for(SquareObject object:objects) {
+            object.checkPositionAndRender();
+        }
     }
 
 
@@ -113,15 +87,16 @@ public class Barriers {
     private void createBarriers(AreaQuad area, int num) {
         //create new barriers
         for (int i = 0; i < num; i++) {
+
             //note: barriers can be created on top of each other
-            color.add(new Color());
             int s = GameState.RAND.nextInt(200 - 20) + 20;
-            size.add(s);
+
             //System.out.println("Shape of radius " + s + " created.");
 
             GameCoordinate coord = new GameCoordinate(GameState.RAND.nextInt(area.getXRange()) + area.getWesternFrontier(), GameState.RAND.nextInt(area.getYRange()) + area.getSouthernFrontier());
             coord.print();
-            coords.add(coord);
+
+            objects.add(new SquareObject(coord, s, new Color()));
         }
     }
 }

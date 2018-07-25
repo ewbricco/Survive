@@ -16,13 +16,15 @@ public class MovementUtils {
 
         ArrayList<Integer> posX = new ArrayList();
         ArrayList<Integer> posY = new ArrayList();
+        ArrayList<Integer> size = new ArrayList();
 
-        barriers.coords.forEach(coordinate -> {
-            posX.add(coordinate.getX());
-            posY.add(coordinate.getY());
+        barriers.objects.forEach(object -> {
+            posX.add(object.getCoord().getX());
+            posY.add(object.getCoord().getY());
+            size.add(object.getSize());
         });
 
-        int adj = collisionAdjustment(direction, mc.getX(), mc.getY(), mcSize, posX, posY, barriers.size, MOVEMENTDISTANCE);
+        int adj = collisionAdjustment(direction, mc.getX(), mc.getY(), mcSize, posX, posY, size, MOVEMENTDISTANCE);
 
         if(direction == Direction.NORTH){
             coordDelta = new Coordinate(0, MOVEMENTDISTANCE - adj);
