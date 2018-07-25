@@ -9,6 +9,7 @@ import java.util.ArrayList;
  */
 public class MovementUtils {
 
+    //computes new coordinate mc, given barriers and attempted movement direction
     public static Coordinate move(Direction direction, Coordinate mc, int mcSize, Barriers barriers, int MOVEMENTDISTANCE) {
 
         Coordinate coordDelta;
@@ -21,25 +22,19 @@ public class MovementUtils {
             posY.add(coordinate.getY());
         });
 
+        int adj = collisionAdjustment(direction, mc.getX(), mc.getY(), mcSize, posX, posY, barriers.size, MOVEMENTDISTANCE);
+
         if(direction == Direction.NORTH){
-            int adj = collisionAdjustment(Direction.NORTH, mc.getX(), mc.getY(), mcSize, posX, posY, barriers.size, MOVEMENTDISTANCE);
             coordDelta = new Coordinate(0, MOVEMENTDISTANCE - adj);
-            barriers.uncalculatedNorth += MOVEMENTDISTANCE;
         }
         else if(direction == Direction.SOUTH){
-            int adj = collisionAdjustment(Direction.SOUTH, mc.getX(), mc.getY(), mcSize, posX, posY, barriers.size, MOVEMENTDISTANCE);
             coordDelta = new Coordinate(0, adj - MOVEMENTDISTANCE);
-            barriers.uncalculatedSouth += MOVEMENTDISTANCE;
         }
         else if(direction == Direction.WEST){
-            int adj = collisionAdjustment(Direction.WEST, mc.getX(), mc.getY(), mcSize, posX, posY, barriers.size, MOVEMENTDISTANCE);
             coordDelta = new Coordinate(adj - MOVEMENTDISTANCE, 0);
-            barriers.uncalculatedWest += MOVEMENTDISTANCE;
         }
         else if(direction == Direction.EAST){
-            int adj = collisionAdjustment(Direction.EAST, mc.getX(), mc.getY(), mcSize, posX, posY, barriers.size, MOVEMENTDISTANCE);
             coordDelta = new Coordinate(MOVEMENTDISTANCE - adj, 0);
-            barriers.uncalculatedEast += MOVEMENTDISTANCE;
         } else {
             coordDelta = new Coordinate(0,0);
         }

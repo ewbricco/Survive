@@ -16,10 +16,10 @@ public class Barriers {
     public ArrayList<Integer> size;
     private ArrayList<Color> color;
     private ArrayList<Integer> toRender;
-    public int uncalculatedNorth;
-    public int uncalculatedWest;
-    public int uncalculatedSouth;
-    public int uncalculatedEast;
+    //public int uncalculatedNorth;
+    //public int uncalculatedWest;
+    //public int uncalculatedSouth;
+    //public int uncalculatedEast;
 
     private AreaQuad frontier;
 
@@ -64,6 +64,8 @@ public class Barriers {
         modifyFrontiers(center, frontier.getDistancesToPoint(center));
     }
 
+
+    //calculates new barriers if an approaching area hasn't been calculated
     private void modifyFrontiers(GameCoordinate center, Map<Direction, Integer> distances) {
 
         for (Direction d : distances.keySet()) {

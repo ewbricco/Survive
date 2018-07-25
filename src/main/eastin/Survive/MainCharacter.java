@@ -83,6 +83,7 @@ public class MainCharacter {
         lastMovement = System.nanoTime() / 1000000;
     }
 
+    //coordinates that are on screen
     public AreaQuad getAreaQuad() {
         return new AreaQuad(coords.getY() + GameState.HEIGHT/2, coords.getY() - GameState.HEIGHT/2, coords.getX() - GameState.WIDTH/2, coords.getX() + GameState.WIDTH/2);
     }

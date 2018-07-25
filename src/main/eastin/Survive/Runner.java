@@ -13,12 +13,12 @@ public class Runner {
     public static long window;
     public static MainCharacter mc;
     public static Barriers barriers;
-    //public static Enemies enemies;
+    public static Enemies enemies;
 
     public static void main(String[] args) {
         mc = new MainCharacter();
         barriers = new Barriers();
-        //enemies = new Enemies();
+        enemies = new Enemies();
 
         try {
             initGLFW();
@@ -86,8 +86,8 @@ public class Runner {
             glfwPollEvents();
             barriers.update(mc.getCoords());
             barriers.render(mc.getAreaQuad());
-            //enemies.update(mc.getX(), mc.getY());
-            //enemies.render();
+            enemies.update(mc.getCoords());
+            enemies.render();
             mc.render();
             mc.move();
             glfwSwapBuffers(window); // swap the color buffers
