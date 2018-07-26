@@ -79,9 +79,10 @@ public class Runner {
 
 
     private static void loop() {
-        long start = System.currentTimeMillis();
         GL.createCapabilities();
         glClearColor(.2f,.8f,0f, 0f);
+        int frames = 0;
+        long lastFrameRateDisplay = System.currentTimeMillis();
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             glfwPollEvents();
@@ -92,7 +93,12 @@ public class Runner {
             mc.render();
             mc.update();
             glfwSwapBuffers(window); // swap the color buffers
+            frames++;
+            if(System.currentTimeMillis() - lastFrameRateDisplay > 5000) {
+                System.out.println("frame rate: " + (double)(1000*frames) / ((double)((System.currentTimeMillis()) - (lastFrameRateDisplay))));
+                lastFrameRateDisplay = System.currentTimeMillis();
+                frames = 0;
+            }
         }
-        System.out.println("frame took: " + (start - System.currentTimeMillis()));
     }
 }
