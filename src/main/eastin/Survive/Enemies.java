@@ -9,13 +9,15 @@ import java.util.List;
  * Created by ebricco on 12/2/16.
  */
 public class Enemies {
-    private List<RectangularObject> objects;
-    private long lastMovement;
 
+    private List<MovingRectangle> objects;
+    private long lastMovement;
     final long TIMEBETWEENMOVEMENTS = 100;
+    private final int SIZE = 60;
     final int MOVEMENTDISTANCE = 5;
     private final Color COLOR = new Color(1,0,0);
-    private final int SIZE = 30;
+
+    private final Coordinate STARTINGPOSITION = new Coordinate(250, 450);
 
     public Enemies(){
         objects = new ArrayList<>();
@@ -30,13 +32,13 @@ public class Enemies {
     }
 
     private void init(){
-        objects.add(new RectangularObject(new GameCoordinate(300,500), SIZE, COLOR));
+        objects.add(new MovingRectangle(STARTINGPOSITION.getX(), STARTINGPOSITION.getX() + SIZE, STARTINGPOSITION.getY() + SIZE, STARTINGPOSITION.getY(), COLOR));
     }
 
     //seeks target
     public void move(Coordinate target) {
         objects.forEach(object -> {
-            object.getCoord().seek(target, MOVEMENTDISTANCE);
+            object.seek(target, MOVEMENTDISTANCE);
         });
     }
 

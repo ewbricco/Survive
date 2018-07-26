@@ -11,13 +11,14 @@ import java.util.List;
 /**
  * Created by ebricco on 7/25/18.
  */
-public class MovingRectangle extends RectangularObject {
-    public MovingRectangle(GameCoordinate coord, int width, int height, Color color) {
-        super(coord, width, height, color);
+public class MovingRectangle extends RenderableRectangle {
+
+    public MovingRectangle(int leftBound, int rightBound, int upperBound, int lowerBound, Color color) {
+        super(leftBound, rightBound, upperBound, lowerBound, color);
     }
 
     //moves rectangle in direction d by distance, unless it hits an obstacle. Returns impacted obstacle
-    public RectangularObject move(Direction direction, int distance, List<RectangularObject> obstacles) {
+    public RectangularObject move(Direction direction, int distance, List<? extends RectangularObject> obstacles) {
 
         System.out.println(direction);
 
@@ -54,31 +55,44 @@ public class MovingRectangle extends RectangularObject {
             }
         }
 
-        coord = sim.getCoord();
+        //set new bounds
+        setBounds(sim);
 
         return collisionObject;
     }
 
-    public void unconditionalTeleport(GameCoordinate coordinate) {
-        coord = coordinate;
+    public void move(Coordinate diff) {
+        leftBound += diff.getX();
+        rightBound += diff.getX();
+        upperBound += diff.getY();
+        lowerBound += diff.getY();
     }
 
     public RectangularObject simulateUnhinderedMovement(Direction direction, int distance) {
-        GameCoordinate simCoord = coord.clone();
+
         if(direction == Direction.NORTH){
-            simCoord.addY(distance);
+            return new RectangularObject(leftBound, rightBound, upperBound + distance, lowerBound + distance);
         }
         else if(direction == Direction.SOUTH){
-            simCoord.addY(-1*distance);
+            return new RectangularObject(leftBound, rightBound, upperBound - distance, lowerBound - distance);
         }
         else if(direction == Direction.WEST){
-            simCoord.addX(-1*distance);
+            return new RectangularObject(leftBound - distance, rightBound - distance, upperBound, lowerBound);
         }
         else if(direction == Direction.EAST){
-            simCoord.addX(distance);
+            return new RectangularObject(leftBound + distance, rightBound + distance, upperBound, lowerBound);
         }
 
-        return new RectangularObject(simCoord, width, height, color);
+        return null;
+    }
+
+    public void seek(Coordinate target, int distance) {
+        //System.out.println("target: " + target.toString());
+        //System.out.println("center: " + getCenter());
+        Coordinate diff = Coordinate.Difference(target, getCenter());
+        diff.pythagoreanScale(distance);
+        //System.out.println(diff.toString());
+        move(diff);
     }
 
 }

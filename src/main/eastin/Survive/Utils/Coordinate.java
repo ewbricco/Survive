@@ -24,12 +24,14 @@ public class Coordinate {
 
     public double distanceTo(Coordinate c) {
         int xdiff = (x - c.getX());
-        xdiff *= xdiff;
 
-        int ydiff = (x - c.getY());
-        ydiff *= ydiff;
+        int ydiff = (y - c.getY());
 
-        return Math.pow((double)(xdiff+ydiff), .5d);
+        return Math.pow(Math.pow(xdiff, 2)+Math.pow(ydiff, 2), .5d);
+    }
+
+    public double getHypotenuse() {
+        return distanceTo(new Coordinate(0,0));
     }
 
     //updates coordinate to be closer to the target in both x and y by distance
@@ -80,6 +82,15 @@ public class Coordinate {
 
     public static Coordinate Difference(Coordinate c1, Coordinate c2) {
         return new Coordinate(c1.getX() - c2.getX(), c1.getY() - c2.getY());
+    }
+
+    //maintains x:y ratio, but scales so hypotenuse is equal given value
+    public void pythagoreanScale(int hypo) {
+
+        double scaler = Math.pow(Math.pow(hypo, 2) / (Math.pow(x, 2) + Math.pow(y, 2)), .5d);
+
+        x = (int) Math.round((double)x  * scaler);
+        y = (int) Math.round((double)y  * scaler);
     }
 }
 

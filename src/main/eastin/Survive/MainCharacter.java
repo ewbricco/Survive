@@ -21,7 +21,7 @@ public class MainCharacter extends MovingRectangle {
     private Direction direction;
 
     public MainCharacter(){
-        super(new GameCoordinate(STARTPOINTX, STARTPOINTY), WIDTH, HEIGHT, defaultColor);
+        super(STARTPOINTX, STARTPOINTX + WIDTH, STARTPOINTY + HEIGHT, STARTPOINTY, defaultColor);
     }
 
     public void render() {
@@ -76,12 +76,8 @@ public class MainCharacter extends MovingRectangle {
         }
     }
 
-    //coordinates that are on screen
-    public AreaQuad getAreaQuad() {
-        return new AreaQuad(coord.getY() + GameState.HEIGHT/2, coord.getY() - GameState.HEIGHT/2, coord.getX() - GameState.WIDTH/2, coord.getX() + GameState.WIDTH/2);
-    }
-
-    public GameCoordinate getCoords() {
-        return coord;
+    //area representing screen
+    public RectangularObject getScreen() {
+        return new RectangularObject(getLeftBound() - GameState.WIDTH/2 + WIDTH/2, getRightBound() + GameState.WIDTH/2 - WIDTH/2, getUpperBound() + GameState.HEIGHT/2 - HEIGHT/2, getLowerBound() - GameState.HEIGHT/2 + HEIGHT/2);
     }
 }
