@@ -1,6 +1,6 @@
-package main.eastin.Survive.Utils;
+package eastin.Survive.Utils;
 
-import main.eastin.Survive.GameState;
+import eastin.Survive.GameState;
 
 import static org.lwjgl.opengl.GL11.glColor3f;
 

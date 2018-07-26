@@ -1,36 +1,31 @@
-package main.eastin.Survive;
+package eastin.Survive;
 
-import main.eastin.Survive.Utils.*;
+import eastin.Survive.Utils.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * Created by ebricco on 11/27/16.
  */
-public class MainCharacter {
+public class MainCharacter extends MovingRectangle {
 
-    private GameCoordinate coords; //location within map
-    private RenderCoordinate renderCoords;
-    private final int WIDTH = 41;
-    private final int HEIGHT = 41;
-    private final int STARTPOINTX = GameState.WIDTH/2;
-    private final int STARTPOINTY = GameState.HEIGHT/2;
-    private Color color;
+    private final static int WIDTH = 41;
+    private final static int HEIGHT = 41;
+    private final static int STARTPOINTX = GameState.WIDTH/2;
+    private final static int STARTPOINTY = GameState.HEIGHT/2;
+    private final static Color defaultColor = new Color(0,0,0);
 
-    final long TIMEBETWEENMOVEMENTS = 25;
-    final int MOVEMENTDISTANCE = 15;
+    static final long TIMEBETWEENMOVEMENTS = 25;
+    static final int MOVEMENTDISTANCE = 15;
     private long lastMovement;
     private Direction direction;
 
     public MainCharacter(){
-        coords = new GameCoordinate(0, 0);
-        renderCoords = new RenderCoordinate(STARTPOINTX, STARTPOINTY);
-        lastMovement = 0;
-        color = new Color(0,0,0);
+        super(new GameCoordinate(STARTPOINTX, STARTPOINTY), WIDTH, HEIGHT, defaultColor);
     }
 
-    public void render(){
-        RenderUtils.renderQuad(renderCoords, WIDTH, HEIGHT, color);
+    public void render() {
+        checkPositionAndRender();
     }
 
     //add barriers for other directions
@@ -69,26 +64,24 @@ public class MainCharacter {
 
     }
 
-    public void move(){
+    public void update(){
         if(System.nanoTime()/1000000 - lastMovement < TIMEBETWEENMOVEMENTS){
             return;
         }
 
-        if(System.nanoTime()%100==0) {
-            System.out.println("moving in direction " + direction + " and currently at " + coords.getX() + "," + coords.getY());
+        if(direction != null) {
+            System.out.println("moving mc. current quad: " + toString());
+            move(direction, MOVEMENTDISTANCE, Runner.barriers.getObjects());
+            lastMovement = System.nanoTime() / 1000000;
         }
-
-        coords.add(MovementUtils.move(direction, coords, WIDTH, Runner.barriers, MOVEMENTDISTANCE));
-
-        lastMovement = System.nanoTime() / 1000000;
     }
 
     //coordinates that are on screen
     public AreaQuad getAreaQuad() {
-        return new AreaQuad(coords.getY() + GameState.HEIGHT/2, coords.getY() - GameState.HEIGHT/2, coords.getX() - GameState.WIDTH/2, coords.getX() + GameState.WIDTH/2);
+        return new AreaQuad(coord.getY() + GameState.HEIGHT/2, coord.getY() - GameState.HEIGHT/2, coord.getX() - GameState.WIDTH/2, coord.getX() + GameState.WIDTH/2);
     }
 
     public GameCoordinate getCoords() {
-        return coords;
+        return coord;
     }
 }

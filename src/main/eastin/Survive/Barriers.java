@@ -1,6 +1,6 @@
-package main.eastin.Survive;
+package eastin.Survive;
 
-import main.eastin.Survive.Utils.*;
+import eastin.Survive.Utils.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Barriers {
 
-    public List<SquareObject> objects;
+    public List<RectangularObject> objects;
 
     private AreaQuad frontier;
 
@@ -33,7 +33,7 @@ public class Barriers {
     }
 
     public void render() {
-        for(SquareObject object:objects) {
+        for(RectangularObject object:objects) {
             object.checkPositionAndRender();
         }
     }
@@ -46,7 +46,7 @@ public class Barriers {
 
             //if a frontier is too close, expand it
             if (distances.get(d) < 3000) {
-                System.out.println("expanding frontier in direction "  + d);
+                //System.out.println("expanding frontier in direction "  + d);
                 expandFrontier(d, 4000 - distances.get(d));
             }
 
@@ -74,7 +74,7 @@ public class Barriers {
 
         AreaQuad creationArea = frontier.getAdjacentQuad(d, expansionSize);
 
-        System.out.println("creating " + num + " barriers in direction " + d);
+        //System.out.println("creating " + num + " barriers in direction " + d);
         //create barriers
         createBarriers(creationArea, num);
 
@@ -94,9 +94,13 @@ public class Barriers {
             //System.out.println("Shape of radius " + s + " created.");
 
             GameCoordinate coord = new GameCoordinate(GameState.RAND.nextInt(area.getXRange()) + area.getWesternFrontier(), GameState.RAND.nextInt(area.getYRange()) + area.getSouthernFrontier());
-            coord.print();
+            //coord.print();
 
-            objects.add(new SquareObject(coord, s, new Color()));
+            objects.add(new RectangularObject(coord, s, new Color()));
         }
+    }
+
+    public List<RectangularObject> getObjects() {
+        return objects;
     }
 }

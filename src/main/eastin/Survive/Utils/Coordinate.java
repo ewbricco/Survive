@@ -1,11 +1,11 @@
-package main.eastin.Survive.Utils;
+package eastin.Survive.Utils;
 
 /**
  * Created by ebricco on 9/30/17.
  */
 public class Coordinate {
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
 
     public Coordinate(int x, int y) {
         this.x = x;
@@ -62,8 +62,20 @@ public class Coordinate {
         this.y = y;
     }
 
+    public void addX(int inc) {
+        x += inc;
+    }
+
+    public void addY(int inc) {
+        y += inc;
+    }
+
     public void print() {
         System.out.println("coordinate located at (" + x + "," + y + ")");
+    }
+
+    public String toString() {
+        return "coordinate located at (" + x + "," + y + ")";
     }
 
     public static Coordinate Difference(Coordinate c1, Coordinate c2) {

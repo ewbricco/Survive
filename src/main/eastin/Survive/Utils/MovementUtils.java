@@ -1,6 +1,6 @@
-package main.eastin.Survive.Utils;
+package eastin.Survive.Utils;
 
-import main.eastin.Survive.Barriers;
+import eastin.Survive.Barriers;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package main.eastin.Survive;
+package eastin.Survive;
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -79,6 +79,7 @@ public class Runner {
 
 
     private static void loop() {
+        long start = System.currentTimeMillis();
         GL.createCapabilities();
         glClearColor(.2f,.8f,0f, 0f);
         while (!glfwWindowShouldClose(window)) {
@@ -89,8 +90,9 @@ public class Runner {
             enemies.update(mc.getCoords());
             enemies.render();
             mc.render();
-            mc.move();
+            mc.update();
             glfwSwapBuffers(window); // swap the color buffers
         }
+        System.out.println("frame took: " + (start - System.currentTimeMillis()));
     }
 }

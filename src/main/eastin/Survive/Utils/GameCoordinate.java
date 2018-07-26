@@ -1,4 +1,4 @@
-package main.eastin.Survive.Utils;
+package eastin.Survive.Utils;
 
 /**
  * Created by ebricco on 9/30/17.
@@ -6,5 +6,10 @@ package main.eastin.Survive.Utils;
 public class GameCoordinate extends Coordinate {
     public GameCoordinate(int x, int y) {
         super(x,y);
+    }
+
+    @Override
+    public GameCoordinate clone() {
+        return new GameCoordinate(x, y);
     }
 }

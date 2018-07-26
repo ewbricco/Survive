@@ -1,4 +1,4 @@
-package main.eastin.Survive.Utils;
+package eastin.Survive.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +8,7 @@ import java.util.Map;
  *
  * represents an area of absolute coordinates
  */
+@Deprecated
 public class AreaQuad {
     private int northernFrontier; //ymax
     private int southernFrontier; //ymin

@@ -1,20 +1,15 @@
-package main.eastin.Survive;
+package eastin.Survive;
 
-import main.eastin.Survive.Utils.*;
-import org.lwjgl.system.CallbackI;
+import eastin.Survive.Utils.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 
 /**
  * Created by ebricco on 12/2/16.
  */
 public class Enemies {
-    private List<SquareObject> objects;
+    private List<RectangularObject> objects;
     private long lastMovement;
 
     final long TIMEBETWEENMOVEMENTS = 100;
@@ -35,7 +30,7 @@ public class Enemies {
     }
 
     private void init(){
-        objects.add(new SquareObject(new GameCoordinate(300,500), SIZE, COLOR));
+        objects.add(new RectangularObject(new GameCoordinate(300,500), SIZE, COLOR));
     }
 
     //seeks target
