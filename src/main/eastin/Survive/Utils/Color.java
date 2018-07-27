@@ -1,4 +1,4 @@
-package eastin.Survive.Utils;
+package eastin.Survive.utils;
 
 import eastin.Survive.GameState;
 

@@ -1,6 +1,8 @@
-package eastin.Survive;
+package eastin.Survive.objects;
 
-import eastin.Survive.Utils.*;
+import eastin.Survive.GameState;
+import eastin.Survive.Runner;
+import eastin.Survive.utils.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 

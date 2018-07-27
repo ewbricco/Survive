@@ -1,11 +1,9 @@
-package eastin.Survive;
+package eastin.Survive.objects;
 
-import eastin.Survive.Utils.*;
+import eastin.Survive.utils.*;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by ebricco on 7/25/18.

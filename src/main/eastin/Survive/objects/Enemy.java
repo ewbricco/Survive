@@ -1,7 +1,7 @@
-package eastin.Survive;
+package eastin.Survive.objects;
 
-import eastin.Survive.Utils.Color;
-import eastin.Survive.Utils.Coordinate;
+import eastin.Survive.utils.Color;
+import eastin.Survive.utils.Coordinate;
 
 import java.util.List;
 

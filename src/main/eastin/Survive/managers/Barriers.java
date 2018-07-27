@@ -1,7 +1,10 @@
-package eastin.Survive;
+package eastin.Survive.managers;
 
-import eastin.Survive.Utils.*;
-import org.w3c.dom.css.Rect;
+import eastin.Survive.GameState;
+import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.objects.RenderableRectangle;
+import eastin.Survive.Runner;
+import eastin.Survive.utils.*;
 
 import java.util.ArrayList;
 import java.util.List;

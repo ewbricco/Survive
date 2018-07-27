@@ -1,11 +1,10 @@
 package eastin.Survive;
 
-import eastin.Survive.Utils.Color;
-import eastin.Survive.Utils.Coordinate;
-import eastin.Survive.Utils.Direction;
+import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.utils.Coordinate;
+import eastin.Survive.utils.Direction;
 import org.junit.Test;
 
-import java.net.NoRouteToHostException;
 import java.util.Map;
 
 /**

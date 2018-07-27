@@ -1,9 +1,8 @@
-package eastin.Survive;
+package eastin.Survive.objects;
 
-import eastin.Survive.Utils.Color;
-import eastin.Survive.Utils.Coordinate;
-import eastin.Survive.Utils.Direction;
-import org.w3c.dom.css.Rect;
+import eastin.Survive.utils.Color;
+import eastin.Survive.utils.Coordinate;
+import eastin.Survive.utils.Direction;
 
 import java.util.List;
 

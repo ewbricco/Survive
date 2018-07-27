@@ -1,6 +1,8 @@
-package eastin.Survive;
+package eastin.Survive.managers;
 
-import eastin.Survive.Utils.*;
+import eastin.Survive.objects.Enemy;
+import eastin.Survive.Runner;
+import eastin.Survive.utils.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

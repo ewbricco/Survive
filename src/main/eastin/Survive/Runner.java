@@ -1,5 +1,8 @@
 package eastin.Survive;
 
+import eastin.Survive.managers.Barriers;
+import eastin.Survive.managers.Enemies;
+import eastin.Survive.objects.MainCharacter;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 

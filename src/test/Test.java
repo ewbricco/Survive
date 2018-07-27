@@ -1,4 +1,4 @@
-import eastin.Survive.MainCharacter;
+import eastin.Survive.objects.MainCharacter;
 
 /**
  * Created by ebricco on 7/26/18.
