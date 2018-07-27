@@ -11,11 +11,12 @@ import java.util.List;
  */
 public class Enemies {
 
-    private List<MovingRectangle> objects;
+    private List<Enemy> objects;
+
     private long lastMovement;
     final long TIMEBETWEENMOVEMENTS = 100;
+
     private final int SIZE = 60;
-    final int MOVEMENTDISTANCE = 5;
     private final Color COLOR = new Color(1,0,0);
 
     private final Coordinate STARTINGPOSITION = new Coordinate(250, 450);
@@ -33,13 +34,14 @@ public class Enemies {
     }
 
     private void init(){
-        objects.add(new MovingRectangle(STARTINGPOSITION.getX(), STARTINGPOSITION.getX() + SIZE, STARTINGPOSITION.getY() + SIZE, STARTINGPOSITION.getY(), COLOR));
+        objects.add(new Enemy(STARTINGPOSITION.getX(), STARTINGPOSITION.getX() + SIZE, STARTINGPOSITION.getY() + SIZE, STARTINGPOSITION.getY(), COLOR));
     }
 
     //seeks target
     public void move(Coordinate target) {
+        objects.removeIf(enemy -> enemy.toDespawn);
         objects.forEach(object -> {
-            handleCollision(object.seek(target, MOVEMENTDISTANCE, Arrays.asList(Runner.mc)));
+            object.update(target, Arrays.asList(Runner.mc));
         });
     }
 
@@ -48,12 +50,6 @@ public class Enemies {
         if(System.nanoTime() / 1000000 - lastMovement > TIMEBETWEENMOVEMENTS){
             move(target);
             lastMovement = System.nanoTime() / 1000000;
-        }
-    }
-
-    private void handleCollision(RectangularObject object) {
-        if(object instanceof MainCharacter) {
-            Runner.mc.takeDamage(1);
         }
     }
 }
