@@ -3,6 +3,7 @@ package eastin.Survive;
 import eastin.Survive.Utils.Color;
 import eastin.Survive.Utils.Coordinate;
 import eastin.Survive.Utils.Direction;
+import org.w3c.dom.css.Rect;
 
 import java.util.List;
 
@@ -62,11 +63,36 @@ public class MovingRectangle extends RenderableRectangle {
         return collisionObject;
     }
 
-    public void move(Coordinate diff) {
-        leftBound += diff.getX();
-        rightBound += diff.getX();
-        upperBound += diff.getY();
-        lowerBound += diff.getY();
+    public RectangularObject move(Coordinate diff, List<RectangularObject> interactables) {
+
+        RectangularObject collisionObject = null;
+        RectangularObject next;
+
+        if(diff.getY() > 0) {
+            next = move(Direction.NORTH, diff.getY(), interactables);
+            if(next != null) {
+                collisionObject = next;
+            }
+        } else if(diff.getY() < 0) {
+            next = move(Direction.SOUTH, -diff.getY(), interactables);
+            if(next != null) {
+                collisionObject = next;
+            }
+        }
+
+        if(diff.getX() > 0) {
+            next = move(Direction.EAST, diff.getX(), interactables);
+            if(next != null) {
+                collisionObject = next;
+            }
+        } else if(diff.getX() < 0) {
+            next = move(Direction.WEST, -diff.getX(), interactables);
+            if(next != null) {
+                collisionObject = next;
+            }
+        }
+
+        return collisionObject;
     }
 
     public RectangularObject simulateUnhinderedMovement(Direction direction, int distance) {
@@ -87,13 +113,13 @@ public class MovingRectangle extends RenderableRectangle {
         return null;
     }
 
-    public void seek(Coordinate target, int distance) {
+    public RectangularObject seek(Coordinate target, int distance, List<RectangularObject> interactables) {
         //System.out.println("target: " + target.toString());
         //System.out.println("center: " + getCenter());
         Coordinate diff = Coordinate.Difference(target, getCenter());
         diff.pythagoreanScale(distance);
         //System.out.println(diff.toString());
-        move(diff);
+        return move(diff, interactables);
     }
 
 }

@@ -3,6 +3,7 @@ package eastin.Survive;
 import eastin.Survive.Utils.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class Enemies {
     //seeks target
     public void move(Coordinate target) {
         objects.forEach(object -> {
-            object.seek(target, MOVEMENTDISTANCE);
+            handleCollision(object.seek(target, MOVEMENTDISTANCE, Arrays.asList(Runner.mc)));
         });
     }
 
@@ -47,6 +48,12 @@ public class Enemies {
         if(System.nanoTime() / 1000000 - lastMovement > TIMEBETWEENMOVEMENTS){
             move(target);
             lastMovement = System.nanoTime() / 1000000;
+        }
+    }
+
+    private void handleCollision(RectangularObject object) {
+        if(object instanceof MainCharacter) {
+            System.out.println("enemy collided with main character");
         }
     }
 }
