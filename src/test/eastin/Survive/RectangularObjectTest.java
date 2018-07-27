@@ -53,4 +53,13 @@ public class RectangularObjectTest {
         assert(rect1.overlapsWith(rect2));
         assert(rect2.overlapsWith(rect1));
     }
+
+    @Test
+    public void testOnePixelLineOverlap() {
+        RectangularObject rect1 = new RectangularObject(0,1000,1000,0);
+        RectangularObject rect2 = new RectangularObject(1000,1002,1000,0);
+
+        assert(rect1.overlapsWith(rect2));
+        assert(rect2.overlapsWith(rect1));
+    }
 }

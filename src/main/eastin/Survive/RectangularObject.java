@@ -70,16 +70,16 @@ public class RectangularObject {
 
     public boolean overlapsWith(RectangularObject rect) {
 
-        boolean axisAlignedWestEast = this.getLeftBound() > rect.getLeftBound() && this.getLeftBound() < rect.getRightBound() ||
-                this.getRightBound() > rect.getLeftBound() && this.getRightBound() < rect.getRightBound() ||
+        boolean axisAlignedWestEast = this.getLeftBound() >= rect.getLeftBound() && this.getLeftBound() <= rect.getRightBound() ||
+                this.getRightBound() >= rect.getLeftBound() && this.getRightBound() <= rect.getRightBound() ||
                 this.getLeftBound() <= rect.getLeftBound() && this.getRightBound() >= rect.getRightBound();
 
         if (!axisAlignedWestEast) {
             return false;
         }
 
-        boolean axisAlignedNorthSouth = this.getLowerBound() > rect.getLowerBound() && this.getLowerBound() < rect.getUpperBound() ||
-                this.getUpperBound() > rect.getLowerBound() && this.getUpperBound() < rect.getUpperBound() ||
+        boolean axisAlignedNorthSouth = this.getLowerBound() >= rect.getLowerBound() && this.getLowerBound() <= rect.getUpperBound() ||
+                this.getUpperBound() >= rect.getLowerBound() && this.getUpperBound() <= rect.getUpperBound() ||
                 this.getLowerBound() <= rect.getLowerBound() && this.getUpperBound() >= rect.getUpperBound();
 
         return axisAlignedNorthSouth;
@@ -91,8 +91,6 @@ public class RectangularObject {
         int right = Math.max(this.getRightBound(), rect.getRightBound());
         int up = Math.max(this.getUpperBound(), rect.getUpperBound());
         int down = Math.min(this.getLowerBound(), rect.getLowerBound());
-
-        System.out.println("creating enclosing triangle left: " + left + " right: " + right + " up: " + up + " down: " + down);
 
         return new RectangularObject(left, right, up, down);
     }

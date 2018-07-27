@@ -3,9 +3,7 @@ package eastin.Survive;
 import eastin.Survive.Utils.Color;
 import eastin.Survive.Utils.Coordinate;
 import eastin.Survive.Utils.Direction;
-import eastin.Survive.Utils.GameCoordinate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,15 +18,15 @@ public class MovingRectangle extends RenderableRectangle {
     //moves rectangle in direction d by distance, unless it hits an obstacle. Returns impacted obstacle
     public RectangularObject move(Direction direction, int distance, List<? extends RectangularObject> obstacles) {
 
-        System.out.println(direction);
+        //System.out.println(direction);
 
         RectangularObject sim = simulateUnhinderedMovement(direction, distance);
 
-        System.out.println("sim: " + sim.toString());
+        //System.out.println("sim: " + sim.toString());
 
         RectangularObject affectedArea = createEnclosingRect(sim);
 
-        System.out.println("affected area: "  + affectedArea.toString());
+        //System.out.println("affected area: "  + affectedArea.toString());
 
         RectangularObject collisionObject = null;
 
@@ -36,22 +34,24 @@ public class MovingRectangle extends RenderableRectangle {
         for(RectangularObject object:obstacles){
             if(affectedArea.overlapsWith(object)){
 
-                System.out.println("collision detected: " + object.toString());
+                //System.out.println("collision detected: " + object.toString());
 
                 collisionObject = object;
 
                 if(direction == Direction.NORTH) {
-                    sim.transformUpperBound(collisionObject.getLowerBound());
+                    sim.transformUpperBound(collisionObject.getLowerBound()-1);
                 }
                 else if(direction == Direction.SOUTH){
-                    sim.transformLowerBound(collisionObject.getUpperBound());
+                    sim.transformLowerBound(collisionObject.getUpperBound()+1);
                 }
                 else if(direction == Direction.WEST){
-                    sim.transformLeftBound(collisionObject.getRightBound());
+                    sim.transformLeftBound(collisionObject.getRightBound()+1);
                 }
                 else if(direction == Direction.EAST){
-                    sim.transformRightBound(collisionObject.getLeftBound());
+                    sim.transformRightBound(collisionObject.getLeftBound()-1);
                 }
+
+                affectedArea = createEnclosingRect(sim);
             }
         }
 
