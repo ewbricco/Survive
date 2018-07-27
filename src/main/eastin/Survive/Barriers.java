@@ -1,6 +1,7 @@
 package eastin.Survive;
 
 import eastin.Survive.Utils.*;
+import org.w3c.dom.css.Rect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,10 @@ public class Barriers {
     //TODO: note that if barriers ever become permanent, there is a performance concern with how the spawn area is expanded
     //as the frontiers expand, more and more needs to be calculated to expand it further
     public void update(Coordinate center) {
+
+        //could check if center changed
+        //System.out.println(center.toString());
+
         //check which frontiers are too close to the game center
         modifyFrontiers(frontier.getDistancesToPoint(center));
     }
@@ -45,15 +50,17 @@ public class Barriers {
 
         for (Direction d : distances.keySet()) {
 
+            //System.out.println(d + ": " + Integer.toString(distances.get(d)));
+
             //if a frontier is too close, expand it
             if (distances.get(d) < 3000) {
                 //System.out.println("expanding frontier in direction "  + d);
-                expandFrontier(d, 4000 - distances.get(d));
+                expandFrontier(d, 5000 - distances.get(d));
             }
 
             //if a frontier is too far away, shrink it
-            else if (distances.get(d) > 5000) {
-                //TODO
+            else if (distances.get(d) > 10000) {
+                shrinkFrontier(d, distances.get(d) - 5000);
             }
         }
     }
@@ -66,7 +73,11 @@ public class Barriers {
         double raw;
 
         //calculate number of barriers to create (area of expansion * percent coverage / average area)
+        //System.out.println(d);
+        //System.out.println(expansionSize);
+        //System.out.println(frontier.getPerpendicularRange(d));
         raw = (frontier.getPerpendicularRange(d) * expansionSize) * PERCENTCOVERAGE/ 20000;
+        //System.out.println(raw);
         num = (int) raw;
         chance = raw - (double) num;
         roundedChance = (int) (chance * 100);
@@ -81,6 +92,19 @@ public class Barriers {
 
         //update area tracker
         frontier.expand(d, expansionSize);
+
+        //System.out.println(frontier.toString());
+    }
+
+    private void shrinkFrontier(Direction d, int distance) {
+
+        //System.out.println("there are currently " + objects.size() + " barriers ");
+        RectangularObject toDespawn = frontier.getAdjacentQuad(d, distance);
+
+        objects.removeIf(object -> object.overlapsWith(toDespawn));
+
+        frontier.expand(d, -distance);
+        //System.out.println("trimmed to " + objects.size());
     }
 
 

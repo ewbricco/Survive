@@ -30,6 +30,12 @@ public class MainCharacter extends MovingRectangle {
 
     //add barriers for other directions
     public void checkInput(int key, int action){
+
+        if(key == 0) {
+            System.out.println("zero key");
+            return;
+        }
+
         if(key == GLFW_KEY_W && action == GLFW_PRESS){
             direction = Direction.NORTH;
         }
@@ -70,7 +76,6 @@ public class MainCharacter extends MovingRectangle {
         }
 
         if(direction != null) {
-            System.out.println("moving mc. current quad: " + toString());
             move(direction, MOVEMENTDISTANCE, Runner.barriers.getObjects());
             lastMovement = System.nanoTime() / 1000000;
         }

@@ -18,6 +18,7 @@ public class MovingRectangle extends RenderableRectangle {
     //moves rectangle in direction d by distance, unless it hits an obstacle. Returns impacted obstacle
     public RectangularObject move(Direction direction, int distance, List<? extends RectangularObject> obstacles) {
 
+        //System.out.println("moving mc. current quad: " + toString());
         //System.out.println(direction);
 
         RectangularObject sim = simulateUnhinderedMovement(direction, distance);

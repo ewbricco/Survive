@@ -83,21 +83,66 @@ public class Runner {
         glClearColor(.2f,.8f,0f, 0f);
         int frames = 0;
         long lastFrameRateDisplay = System.currentTimeMillis();
+        long barriersTimer = 0;
+        long enemiesTimer = 0;
+        long mcTimer = 0;
+        long barriersStart;
+        long enemiesStart;
+        long mcStart;
+        long floatTimer = 0;
+        long floatStart;
+        long clearTimer = 0;
+        long clearStart;
+        long swapTimer = 0;
+        long swapStart;
         while (!glfwWindowShouldClose(window)) {
+
+            clearStart = System.currentTimeMillis();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            clearTimer += (System.currentTimeMillis() - clearStart);
+
+            floatStart = System.currentTimeMillis();
             glfwPollEvents();
+            floatTimer += (System.currentTimeMillis() - floatStart);
+
+            barriersStart = System.currentTimeMillis();
             barriers.update(mc.getCenter());
             barriers.render();
+            barriersTimer += (System.currentTimeMillis() - barriersStart);
+
+            enemiesStart = System.currentTimeMillis();
             enemies.update(mc.getCenter());
             enemies.render();
+            enemiesTimer += (System.currentTimeMillis() - enemiesStart);
+
+            mcStart = System.currentTimeMillis();
             mc.render();
             mc.update();
+            mcTimer += (System.currentTimeMillis() - mcStart);
+
+            swapStart = System.currentTimeMillis();
             glfwSwapBuffers(window); // swap the color buffers
+            swapTimer += (System.currentTimeMillis() - swapStart);
+
             frames++;
             if(System.currentTimeMillis() - lastFrameRateDisplay > 5000) {
                 System.out.println("frame rate: " + (double)(1000*frames) / ((double)((System.currentTimeMillis()) - (lastFrameRateDisplay))));
                 lastFrameRateDisplay = System.currentTimeMillis();
                 frames = 0;
+
+                System.out.println("barriers: " + barriersTimer);
+                System.out.println("enemies: " + enemiesTimer);
+                System.out.println("mc: " + mcTimer);
+                System.out.println("float: " + floatTimer);
+                System.out.println("clear: " + clearTimer);
+                System.out.println("swap: " + swapTimer);
+
+                barriersTimer = 0;
+                enemiesTimer = 0;
+                mcTimer = 0;
+                floatTimer = 0;
+                clearTimer = 0;
+                swapTimer = 0;
             }
         }
     }

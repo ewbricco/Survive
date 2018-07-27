@@ -168,10 +168,10 @@ public class RectangularObject {
     public Map<Direction, Integer> getDistancesToPoint(Coordinate c) {
         HashMap<Direction, Integer> distances = new HashMap();
 
-        distances.put(Direction.NORTH, upperBound - c.getY());
-        distances.put(Direction.SOUTH, c.getY() - lowerBound);
-        distances.put(Direction.WEST, c.getX() - leftBound);
-        distances.put(Direction.EAST, upperBound - c.getX());
+        distances.put(Direction.NORTH, Math.abs(upperBound - c.getY()));
+        distances.put(Direction.SOUTH, Math.abs(c.getY() - lowerBound));
+        distances.put(Direction.WEST, Math.abs(c.getX() - leftBound));
+        distances.put(Direction.EAST, Math.abs(rightBound - c.getX()));
 
         return distances;
     }
