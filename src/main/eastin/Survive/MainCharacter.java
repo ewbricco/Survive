@@ -19,9 +19,11 @@ public class MainCharacter extends MovingRectangle {
     static final int MOVEMENTDISTANCE = 15;
     private long lastMovement;
     private Direction direction;
+    private int health;
 
     public MainCharacter(){
         super(STARTPOINTX, STARTPOINTX + WIDTH, STARTPOINTY + HEIGHT, STARTPOINTY, defaultColor);
+        health = 1;
     }
 
     public void render() {
@@ -84,5 +86,14 @@ public class MainCharacter extends MovingRectangle {
     //area representing screen
     public RectangularObject getScreen() {
         return new RectangularObject(getLeftBound() - GameState.WIDTH/2 + WIDTH/2, getRightBound() + GameState.WIDTH/2 - WIDTH/2, getUpperBound() + GameState.HEIGHT/2 - HEIGHT/2, getLowerBound() - GameState.HEIGHT/2 + HEIGHT/2);
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
+
+        if(health <= 0) {
+            System.out.println("****YOU'RE DEAD****");
+            System.exit(0);
+        }
     }
 }

@@ -53,7 +53,7 @@ public class Enemies {
 
     private void handleCollision(RectangularObject object) {
         if(object instanceof MainCharacter) {
-            System.out.println("enemy collided with main character");
+            Runner.mc.takeDamage(1);
         }
     }
 }
