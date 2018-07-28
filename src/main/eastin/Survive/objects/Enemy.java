@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Enemy extends MovingRectangle {
 
-    private final int MOVEMENTDISTANCE = 5;
+    private final int MOVEMENTDISTANCE = 10;
 
     public boolean toDespawn;
 
@@ -25,6 +25,7 @@ public class Enemy extends MovingRectangle {
     private void handleCollision(RectangularObject object) {
         if(object instanceof MainCharacter) {
             ((MainCharacter)object).takeDamage(1);
+            toDespawn = true;
         }
     }
 }

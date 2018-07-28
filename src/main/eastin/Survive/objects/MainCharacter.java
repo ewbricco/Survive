@@ -25,7 +25,7 @@ public class MainCharacter extends MovingRectangle {
 
     public MainCharacter(){
         super(STARTPOINTX, STARTPOINTX + WIDTH, STARTPOINTY + HEIGHT, STARTPOINTY, defaultColor);
-        health = 1;
+        health = 5;
     }
 
     public void render() {
