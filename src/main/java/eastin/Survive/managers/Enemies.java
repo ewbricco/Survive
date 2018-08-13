@@ -46,14 +46,14 @@ public class Enemies {
     public void move(Coordinate target) {
         objects.removeIf(enemy -> enemy.toDespawn);
         objects.forEach(object -> {
-            object.update(target, Arrays.asList(Runner.mc));
+            object.update(target, Arrays.asList(Runner.world.mc));
         });
     }
 
     private void createNewEnemy() {
         //System.out.println("creating new Enemy");
 
-        Coordinate c = Runner.mc.getCenter();
+        Coordinate c = Runner.world.mc.getCenter();
 
         //System.out.println("mc center: " + Runner.mc.getCenter().toString());
 
@@ -74,7 +74,7 @@ public class Enemies {
 
     //attempts to reach target
     public void update(Coordinate target){
-        move(Runner.mc.getCenter());
+        move(Runner.world.mc.getCenter());
 
         if(System.nanoTime() / 1000000 - lastSpawn > TIMEBETWEENSPAWNS){
             //createNewEnemy();

@@ -19,9 +19,6 @@ public class WorldTest {
 
     @Test
     public void testSave() {
-        Runner.mc = new MainCharacter();
-        Runner.enemies = new Enemies();
-        Runner.barriers = new Barriers();
 
         World world = new World();
 

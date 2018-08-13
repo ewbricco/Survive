@@ -1,6 +1,7 @@
 package eastin.Survive.objects;
 
 import eastin.Survive.Runner;
+import eastin.Survive.World;
 import eastin.Survive.managers.Barriers;
 import eastin.Survive.managers.Enemies;
 import eastin.Survive.utils.Color;
@@ -21,16 +22,14 @@ public class EnemyTest {
     @Test
     public void jitterTest() throws Exception {
 
-        Runner.mc = new MainCharacter();
-        Runner.enemies = new Enemies();
-        Runner.barriers = new Barriers();
+        World world = new World();
 
         boolean testCompleted = false;
 
         long begin;
         long toSleep;
 
-        Runner.mc.checkInput(GLFW_KEY_D, GLFW_PRESS);
+        world.handleInput(GLFW_KEY_D, GLFW_PRESS);
 
         long startTest = System.currentTimeMillis();
 
@@ -39,11 +38,11 @@ public class EnemyTest {
         while(!testCompleted) {
             begin = System.currentTimeMillis();
 
-            Runner.mc.update();
-            Runner.enemies.update(Runner.mc.getCenter());
+            world.mc.update();
+            world.enemies.update(world.mc.getCenter());
 
-            int enemyRight = Runner.enemies.objects.get(0).getRightBound();
-            int mcRight = Runner.mc.getRightBound();
+            int enemyRight = world.enemies.objects.get(0).getRightBound();
+            int mcRight = world.mc.getRightBound();
 
             int distance = mcRight - enemyRight;
 

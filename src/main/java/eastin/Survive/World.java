@@ -16,9 +16,9 @@ import java.util.Date;
 public class World implements Serializable {
     static final long serialVersionUID=1L;
 
-    protected static MainCharacter mc;
-    protected static Barriers barriers;
-    protected static Enemies enemies;
+    public static MainCharacter mc;
+    public static Barriers barriers;
+    public static Enemies enemies;
 
     public World() {
         mc = new MainCharacter();

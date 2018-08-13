@@ -26,7 +26,7 @@ public class RenderableRectangle extends RectangularObject {
 
     //if any portion of the object is in the screen, render and return true
     public boolean checkPositionAndRender() {
-        RectangularObject screen = Runner.mc.getScreen();
+        RectangularObject screen = Runner.world.mc.getScreen();
 
         if(!this.overlapsWith(screen)) {
             return false;

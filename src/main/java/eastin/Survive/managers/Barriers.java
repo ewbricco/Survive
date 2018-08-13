@@ -29,7 +29,7 @@ public class Barriers {
 
     public Barriers() {
         objects = new ArrayList<>();
-        Coordinate screenCenter = Runner.mc.getCenter();
+        Coordinate screenCenter = Runner.world.mc.getCenter();
         frontier = new RectangularObject(-GameState.WIDTH/4 + screenCenter.getX(), GameState.WIDTH/4 + screenCenter.getX(), GameState.HEIGHT/4 + screenCenter.getY(), -GameState.HEIGHT/4 + screenCenter.getY());
     }
 
@@ -88,7 +88,7 @@ public class Barriers {
         int roundedChance;
         double raw;
 
-        System.out.println("expanding frontier");
+        //System.out.println("expanding frontier");
 
         //calculate number of barriers to create (area of expansion * percent coverage / average area)
         //System.out.println(d);

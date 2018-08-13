@@ -79,7 +79,7 @@ public class MainCharacter extends MovingRectangle {
 
 
         if(direction != null) {
-            move(direction, movementDistance, Runner.barriers.getObjects());
+            move(direction, movementDistance, Runner.world.barriers.getObjects());
         }
     }
 
