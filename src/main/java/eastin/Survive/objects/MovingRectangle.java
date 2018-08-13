@@ -115,7 +115,7 @@ public class MovingRectangle extends RenderableRectangle {
     public RectangularObject seek(Coordinate target, int distance, List<RectangularObject> interactables) {
         //System.out.println("target: " + target.toString());
         //System.out.println("center: " + getCenter());
-        Coordinate diff = Coordinate.Difference(target, getCenter());
+        Coordinate diff = Coordinate.difference(target, getCenter());
         diff.pythagoreanScale(distance);
         //System.out.println(diff.toString());
         return move(diff, interactables);

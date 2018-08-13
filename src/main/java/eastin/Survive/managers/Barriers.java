@@ -6,6 +6,7 @@ import eastin.Survive.objects.RenderableRectangle;
 import eastin.Survive.Runner;
 import eastin.Survive.utils.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ public class Barriers {
     private RectangularObject frontier;
 
     final double PERCENTCOVERAGE = .05d;
+
+    static int renderCount = 0;
 
     public Barriers() {
         objects = new ArrayList<>();
@@ -42,9 +45,19 @@ public class Barriers {
     }
 
     public void render() {
+        int count = 0;
         for(RenderableRectangle object:objects) {
-            object.checkPositionAndRender();
+            if(object.checkPositionAndRender()) {
+                count++;
+            }
         }
+
+        /*if(renderCount %30 ==0) {
+            System.out.println("number of barriers: " + objects.size());
+            System.out.println("number of barriers rendered: " + count);
+        }*/
+
+        renderCount++;
     }
 
 
@@ -75,6 +88,8 @@ public class Barriers {
         int roundedChance;
         double raw;
 
+        System.out.println("expanding frontier");
+
         //calculate number of barriers to create (area of expansion * percent coverage / average area)
         //System.out.println(d);
         //System.out.println(expansionSize);
@@ -101,10 +116,19 @@ public class Barriers {
 
     private void shrinkFrontier(Direction d, int distance) {
 
-        //System.out.println("there are currently " + objects.size() + " barriers ");
+        //System.out.println("there are currently " + objects.size() + " barriers. Shrinking barries in direction: " + d + " in the amount of " + distance);
+        //System.out.println(frontier.toString());
+        //System.out.println(Runner.mc.getScreen());
         RectangularObject toDespawn = frontier.getAdjacentQuad(d, distance);
+        //System.out.println("toDespawn: " + toDespawn);
+
+        int startingSize = objects.size();
 
         objects.removeIf(object -> object.overlapsWith(toDespawn));
+
+        //System.out.println((startingSize - objects.size()) + " barriers removed");
+
+
 
         frontier.expand(d, -distance);
         //System.out.println("trimmed to " + objects.size());

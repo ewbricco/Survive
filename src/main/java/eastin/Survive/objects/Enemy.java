@@ -10,16 +10,22 @@ import java.util.List;
  */
 public class Enemy extends MovingRectangle {
 
-    private final int MOVEMENTDISTANCE = 10;
+    private final int SPEED = 400;
+
+    private long lastMovement;
 
     public boolean toDespawn;
 
     public Enemy(int leftBound, int rightBound, int upperBound, int lowerBound, Color color) {
         super(leftBound, rightBound, upperBound, lowerBound, color);
+        lastMovement = System.nanoTime() / 1000000;
     }
 
     public void update(Coordinate target, List<RectangularObject> interactables) {
-        handleCollision(seek(target, MOVEMENTDISTANCE, interactables));
+        int movementDistance = (int)(SPEED * ((double)(System.nanoTime()/1000000 - lastMovement) / 1000d));
+        lastMovement = System.nanoTime() / 1000000;
+
+        handleCollision(seek(target, movementDistance, interactables));
     }
 
     private void handleCollision(RectangularObject object) {

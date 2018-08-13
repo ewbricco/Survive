@@ -24,15 +24,17 @@ public class RenderableRectangle extends RectangularObject {
         this.color = color;
     }
 
-    //if any portion of the object is in the screen, render
-    public void checkPositionAndRender() {
+    //if any portion of the object is in the screen, render and return true
+    public boolean checkPositionAndRender() {
         RectangularObject screen = Runner.mc.getScreen();
 
         if(!this.overlapsWith(screen)) {
-            return;
+            return false;
         }
 
         render(screen.getBottomLeft());
+
+        return true;
     }
 
     public void render(Coordinate coord) {

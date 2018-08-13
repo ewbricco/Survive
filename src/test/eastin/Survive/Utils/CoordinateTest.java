@@ -13,4 +13,13 @@ public class CoordinateTest {
         c.pythagoreanScale(20000);
         assert(c.getHypotenuse() > 20000 - 5 && c.getHypotenuse() < 20000 + 5);
     }
+
+    @Test
+    public void rotate() {
+        Coordinate c = new Coordinate(0, 10);
+
+        System.out.println(c);
+        c.rotateAboutPoint(new Coordinate(0,0), 90);
+        System.out.println(c);
+    }
 }

@@ -1,4 +1,4 @@
-package eastin.Survive;
+package eastin.Survive.objects;
 
 import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.utils.Coordinate;

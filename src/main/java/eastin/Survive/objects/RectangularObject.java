@@ -8,8 +8,9 @@ import java.util.Map;
 /**
  * Created by ebricco on 7/25/18.
  *
+ * aligned with axes
  */
-public class RectangularObject {
+public class RectangularObject extends Entity {
 
     protected int leftBound;
     protected int rightBound;
@@ -19,7 +20,7 @@ public class RectangularObject {
     protected int height;
 
     public RectangularObject(int leftBound, int rightBound, int upperBound, int lowerBound) {
-        if(rightBound <= leftBound || upperBound <= lowerBound) {
+        if(rightBound < leftBound || upperBound < lowerBound) {
             throw new IllegalArgumentException("nonsense bounds");
         }
 
@@ -83,6 +84,16 @@ public class RectangularObject {
         return axisAlignedNorthSouth;
     }
 
+    public boolean overlapsWith(Entity e) {
+        if(e instanceof RectangularObject) {
+            return overlapsWith((RectangularObject)e);
+        } else if(e instanceof Line) {
+            return ((Line)e).overlapsWith(this);
+        }
+
+        return false;
+    }
+
     //creates minimum rect that encloses this and given rect
     public RectangularObject createEnclosingRect(RectangularObject rect) {
         int left = Math.min(this.getLeftBound(), rect.getLeftBound());
@@ -94,11 +105,11 @@ public class RectangularObject {
     }
 
     public int getWidth() {
-        return rightBound - leftBound;
+        return width;
     }
 
     public int getHeight() {
-        return upperBound - lowerBound;
+        return height;
     }
 
     public void transformLeftBound(int newLeftBound) {
@@ -141,7 +152,7 @@ public class RectangularObject {
     //returns an Areaquad representing a rectangle next to this quad in direction d and size size
     public RectangularObject getAdjacentQuad(Direction d, int amount) {
         if(d == Direction.NORTH) {
-            return new RectangularObject(leftBound, rightBound, upperBound + amount, lowerBound);
+            return new RectangularObject(leftBound, rightBound, upperBound + amount, upperBound);
         } else if (d == Direction.SOUTH) {
             return new RectangularObject(leftBound, rightBound, lowerBound, lowerBound - amount);
         } else if (d == Direction.WEST) {
@@ -183,5 +194,9 @@ public class RectangularObject {
 
     public Coordinate getCenter() {
         return new Coordinate(leftBound + (rightBound-leftBound)/2, lowerBound + (upperBound - lowerBound)/2);
+    }
+
+    public boolean equals(RectangularObject r) {
+        return this.leftBound == r.getLeftBound() && this.rightBound == r.getRightBound() && this.upperBound == r.getUpperBound() && this.lowerBound == r.getLowerBound();
     }
 }

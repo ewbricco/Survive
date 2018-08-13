@@ -80,7 +80,7 @@ public class Coordinate {
         return "coordinate located at (" + x + "," + y + ")";
     }
 
-    public static Coordinate Difference(Coordinate c1, Coordinate c2) {
+    public static Coordinate difference(Coordinate c1, Coordinate c2) {
         return new Coordinate(c1.getX() - c2.getX(), c1.getY() - c2.getY());
     }
 
@@ -91,6 +91,38 @@ public class Coordinate {
 
         x = (int) Math.round((double)x  * scaler);
         y = (int) Math.round((double)y  * scaler);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Coordinate that = (Coordinate) o;
+
+        if (x != that.x) return false;
+        return y == that.y;
+
+    }
+
+    //sets coordinate to point at angle a from point c
+    public void rotateAboutPoint(Coordinate c, double angle) {
+
+        //get distance from point c
+        double distance = distanceTo(c);
+
+        //get and set x and y components at new angle
+        double xdiff = distance * Math.cos(Math.toDegrees(angle));
+        double ydiff = distance * Math.sin(Math.toDegrees(angle));
+
+        x = (int)Math.round(xdiff) + c.getX();
+        y = (int)Math.round(ydiff) + c.getY();
+    }
+
+    //finds cartesian angle for line between origin and coordinate
+    public double findAngle() {
+        //TODO
+        return 0d;
     }
 }
 

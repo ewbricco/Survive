@@ -19,9 +19,7 @@ public class Runner {
     public static Enemies enemies;
 
     public static void main(String[] args) {
-        mc = new MainCharacter();
-        barriers = new Barriers();
-        enemies = new Enemies();
+        initGameObjects();
 
         try {
             initGLFW();
@@ -33,6 +31,12 @@ public class Runner {
             glfwTerminate();
             glfwSetErrorCallback(null).free();
         }
+    }
+
+    private static void initGameObjects() {
+        mc = new MainCharacter();
+        barriers = new Barriers();
+        enemies = new Enemies();
     }
 
     private static void initGLFW() {
@@ -104,23 +108,24 @@ public class Runner {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             clearTimer += (System.currentTimeMillis() - clearStart);
 
+            barriers.update(mc.getCenter());
+            enemies.update(mc.getCenter());
+            mc.update();
+
             floatStart = System.currentTimeMillis();
             glfwPollEvents();
             floatTimer += (System.currentTimeMillis() - floatStart);
 
             barriersStart = System.currentTimeMillis();
-            barriers.update(mc.getCenter());
             barriers.render();
             barriersTimer += (System.currentTimeMillis() - barriersStart);
 
             enemiesStart = System.currentTimeMillis();
-            enemies.update(mc.getCenter());
             enemies.render();
             enemiesTimer += (System.currentTimeMillis() - enemiesStart);
 
             mcStart = System.currentTimeMillis();
             mc.render();
-            mc.update();
             mcTimer += (System.currentTimeMillis() - mcStart);
 
             swapStart = System.currentTimeMillis();

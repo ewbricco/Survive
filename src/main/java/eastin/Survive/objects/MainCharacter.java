@@ -17,8 +17,7 @@ public class MainCharacter extends MovingRectangle {
     private final static int STARTPOINTY = GameState.HEIGHT/2;
     private final static Color defaultColor = new Color(0,0,0);
 
-    static final long TIMEBETWEENMOVEMENTS = 25;
-    static final int MOVEMENTDISTANCE = 15;
+    static final int SPEED = 600; //px/s
     private long lastMovement;
     private Direction direction;
     private int health;
@@ -75,13 +74,12 @@ public class MainCharacter extends MovingRectangle {
     }
 
     public void update(){
-        if(System.nanoTime()/1000000 - lastMovement < TIMEBETWEENMOVEMENTS){
-            return;
-        }
+        int movementDistance = (int)(SPEED * ((double)(System.nanoTime()/1000000 - lastMovement) / 1000d));
+        lastMovement = System.nanoTime() / 1000000;
+
 
         if(direction != null) {
-            move(direction, MOVEMENTDISTANCE, Runner.barriers.getObjects());
-            lastMovement = System.nanoTime() / 1000000;
+            move(direction, movementDistance, Runner.barriers.getObjects());
         }
     }
 

@@ -16,13 +16,11 @@ import eastin.Survive.Runner;
  */
 public class Enemies {
 
-    private List<Enemy> objects;
+    public List<Enemy> objects;
 
-    private long lastMovement;
     private long lastSpawn;
-    final long TIMEBETWEENMOVEMENTS = 25;
-    final long TIMEBETWEENSPAWNS = 100;
 
+    private final int TIMEBETWEENSPAWNS = 5000;
     private final int SIZE = 60;
     private final Color COLOR = new Color(1,0,0);
 
@@ -30,7 +28,6 @@ public class Enemies {
 
     public Enemies(){
         objects = new ArrayList<>();
-        lastMovement = System.nanoTime() / 1000000;
         init();
         lastSpawn = 0;
     }
@@ -54,11 +51,11 @@ public class Enemies {
     }
 
     private void createNewEnemy() {
-        System.out.println("creating new Enemy");
+        //System.out.println("creating new Enemy");
 
         Coordinate c = Runner.mc.getCenter();
 
-        System.out.println("mc center: " + Runner.mc.getCenter().toString());
+        //System.out.println("mc center: " + Runner.mc.getCenter().toString());
 
         int xDiff = GameState.RAND.nextInt(1000) + 250;
         if(System.currentTimeMillis() %2 == 0) {
@@ -69,21 +66,18 @@ public class Enemies {
             yDiff *= -1;
         }
 
-        System.out.println("xDiff: "  + xDiff);
-        System.out.println("yDiff: "  + yDiff);
+        //System.out.println("xDiff: "  + xDiff);
+        //System.out.println("yDiff: "  + yDiff);
 
         objects.add(new Enemy(c.getX() + xDiff, c.getX() + xDiff + SIZE, c.getY() + yDiff + SIZE, c.getY() + yDiff, COLOR));
     }
 
     //attempts to reach target
     public void update(Coordinate target){
-        if(System.nanoTime() / 1000000 - lastMovement > TIMEBETWEENMOVEMENTS){
-            move(target);
-            lastMovement = System.nanoTime() / 1000000;
-        }
+        move(Runner.mc.getCenter());
 
         if(System.nanoTime() / 1000000 - lastSpawn > TIMEBETWEENSPAWNS){
-            createNewEnemy();
+            //createNewEnemy();
             lastSpawn = System.nanoTime() / 1000000;
         }
 
