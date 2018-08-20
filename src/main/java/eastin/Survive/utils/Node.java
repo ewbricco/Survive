@@ -1,15 +1,15 @@
 package eastin.Survive.utils;
 
 import eastin.Survive.objects.Edge;
-import eastin.Survive.objects.Line;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ebricco on 8/7/18.
  */
-public class Node extends Coordinate {
+public class Node extends Coordinate implements Serializable {
     private List<Edge> edges;
 
     public Node(Coordinate c) {

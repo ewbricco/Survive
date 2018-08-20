@@ -1,8 +1,7 @@
 package eastin.Survive;
 
-import eastin.Survive.managers.Barriers;
-import eastin.Survive.managers.Enemies;
-import eastin.Survive.objects.MainCharacter;
+import eastin.Survive.worldprovider.WorldProvider;
+import eastin.Survive.worldprovider.WorldProviderFactory;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
@@ -13,26 +12,30 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 
 public class Runner {
-    public static long window;
-    public static World world;
+    public long window;
+    protected WorldProvider worldProvider;
+    public static Runner runner;
 
     public static void main(String[] args) {
 
-        world = new World();
+        runner = new Runner();
+
+        World.createWorld();
+        runner.worldProvider = WorldProviderFactory.getWorldProvider();
 
         try {
-            initGLFW();
-            initGL();
-            loop();
-            glfwFreeCallbacks(window);
-            glfwDestroyWindow(window);
+            runner.initGLFW();
+            runner.initGL();
+            runner.loop();
+            glfwFreeCallbacks(runner.window);
+            glfwDestroyWindow(runner.window);
         } finally {
             glfwTerminate();
             glfwSetErrorCallback(null).free();
         }
     }
 
-    private static void initGLFW() {
+    private void initGLFW() {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit())
@@ -49,10 +52,9 @@ public class Runner {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(window, true);
-            }
-            else{
+            } else{
                 //pass key and action to barriers' movement method
-                world.handleInput(key, action);
+                worldProvider.getWorld().handleInput(key, action);
             }
         });
 
@@ -68,17 +70,17 @@ public class Runner {
         glfwShowWindow(window);
     }
 
-    private static void initGL(){
+    private void initGL(){
         GL.createCapabilities();
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0, GameState.WIDTH,0, GameState.HEIGHT, -1, 1);
+        glOrtho(0, GameState.WIDTH, 0, GameState.HEIGHT, -1, 1);
         glMatrixMode(GL_MODELVIEW);
         glDisable(GL_DEPTH_TEST);
     }
 
 
-    private static void loop() {
+    private void loop() {
         GL.createCapabilities();
         glClearColor(.2f,.8f,0f, 0f);
         int frames = 0;
@@ -89,11 +91,15 @@ public class Runner {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            world.update();
+            worldProvider.getWorld().update();
 
             glfwPollEvents();
 
-            world.render();
+            while(worldProvider.getWorld().paused) {
+                glfwPollEvents();
+            }
+
+            worldProvider.getWorld().render();
 
             swapStart = System.currentTimeMillis();
             glfwSwapBuffers(window); // swap the color buffers

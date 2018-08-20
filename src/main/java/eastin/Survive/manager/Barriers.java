@@ -1,10 +1,12 @@
-package eastin.Survive.managers;
+package eastin.Survive.manager;
 
 import eastin.Survive.GameState;
+import eastin.Survive.objects.Barrier;
 import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.objects.RenderableRectangle;
-import eastin.Survive.Runner;
 import eastin.Survive.utils.*;
+import eastin.Survive.worldprovider.WorldProvider;
+import eastin.Survive.worldprovider.WorldProviderFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,9 +19,10 @@ import java.util.Map;
  * barriers are of diameter between 40 and 400 (size should be between 20 and 200)
  * when a barrier is in the screen range (x: 0-2560, y: 0-1600)
  */
-public class Barriers {
 
-    public List<RenderableRectangle> objects;
+public class Barriers implements Manager, Serializable {
+
+    public List<Barrier> objects;
 
     private RectangularObject frontier;
 
@@ -27,28 +30,30 @@ public class Barriers {
 
     static int renderCount = 0;
 
+    protected static WorldProvider worldProvider = WorldProviderFactory.getWorldProvider();
+
     public Barriers() {
         objects = new ArrayList<>();
-        Coordinate screenCenter = Runner.world.mc.getCenter();
+        Coordinate screenCenter = new Coordinate(MainCharacter.STARTPOINTX, MainCharacter.STARTPOINTY);
         frontier = new RectangularObject(-GameState.WIDTH/4 + screenCenter.getX(), GameState.WIDTH/4 + screenCenter.getX(), GameState.HEIGHT/4 + screenCenter.getY(), -GameState.HEIGHT/4 + screenCenter.getY());
     }
 
     //TODO: note that if barriers ever become permanent, there is a performance concern with how the spawn area is expanded
     //as the frontiers expand, more and more needs to be calculated to expand it further
-    public void update(Coordinate center) {
+    public void update() {
 
         //could check if center changed
         //System.out.println(center.toString());
 
         //check which frontiers are too close to the game center
-        modifyFrontiers(frontier.getDistancesToPoint(center));
+        modifyFrontiers(frontier.getDistancesToPoint(worldProvider.getWorld().mc.getCenter()));
     }
 
     public void render() {
-        int count = 0;
+        //int count = 0;
         for(RenderableRectangle object:objects) {
             if(object.checkPositionAndRender()) {
-                count++;
+                //count++;
             }
         }
 
@@ -145,13 +150,48 @@ public class Barriers {
 
             //System.out.println("Shape of radius " + s + " created.");
 
-            GameCoordinate coord = new GameCoordinate(GameState.RAND.nextInt(area.getWidth()) + area.getLeftBound(), GameState.RAND.nextInt(area.getHeight()) + area.getLowerBound());
+            Coordinate coord = new Coordinate(GameState.RAND.nextInt(area.getWidth()) + area.getLeftBound(), GameState.RAND.nextInt(area.getHeight()) + area.getLowerBound());
 
-            objects.add(new RenderableRectangle(coord, s, s, new Color()));
+            objects.add(new Barrier(coord, s, s, new Color()));
         }
     }
 
-    public List<RenderableRectangle> getObjects() {
+    public List<RenderableRectangle> getObjects(RectangularObject r) {
+        List<RenderableRectangle> inArea = new ArrayList<>();
+        objects.forEach(b -> {
+            if(b.overlapsWith(r)) {
+                inArea.add(b);
+            }
+        });
+
+        return inArea;
+    }
+
+    public List<Barrier> getObjects() {
         return objects;
+    }
+
+    public void pause(long time) {
+
+    }
+
+    public void unpause(long time) {
+
+    }
+
+    public Barrier getClosest(Coordinate c) {
+        double minDistance = 100000;
+        double distance;
+        Barrier closestBarrier = null;
+
+        for(Barrier b:objects) {
+            distance = b.getCenter().distanceTo(c);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestBarrier = b;
+            }
+        }
+
+        return closestBarrier;
     }
 }

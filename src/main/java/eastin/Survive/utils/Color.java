@@ -2,12 +2,14 @@ package eastin.Survive.utils;
 
 import eastin.Survive.GameState;
 
+import java.io.Serializable;
+
 import static org.lwjgl.opengl.GL11.glColor3f;
 
 /**
  * Created by ebricco on 6/26/16.
  */
-public class Color {
+public class Color implements Serializable {
     private float red;
     private float green;
     private float blue;

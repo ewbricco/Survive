@@ -2,6 +2,7 @@ package eastin.Survive.objects;
 
 import eastin.Survive.utils.*;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,19 +29,19 @@ public class RectangularObject extends Entity {
         this.rightBound = rightBound;
         this.upperBound = upperBound;
         this.lowerBound = lowerBound;
-        width = rightBound - leftBound;
-        height = upperBound - lowerBound;
+        width = rightBound - leftBound + 1;
+        height = upperBound - lowerBound + 1;
     }
 
     //create rectangle with lower left corner coordinate coord
-    public RectangularObject(GameCoordinate coord, int width, int height)
+    public RectangularObject(Coordinate coord, int width, int height)
     {
         leftBound = coord.getX();
         rightBound = coord.getX() + width;
         upperBound = coord.getY() + height;
         lowerBound = coord.getY();
-        width = rightBound - leftBound;
-        height = upperBound - lowerBound;
+        this.width = rightBound - leftBound + 1;
+        this.height = upperBound - lowerBound + 1;
     }
 
     public Coordinate getBottomLeft() {
@@ -114,22 +115,22 @@ public class RectangularObject extends Entity {
 
     public void transformLeftBound(int newLeftBound) {
         leftBound = newLeftBound;
-        rightBound = leftBound + width;
+        rightBound = leftBound + width - 1;
     }
 
     public void transformRightBound(int newRightBound) {
         rightBound = newRightBound;
-        leftBound = rightBound - width;
+        leftBound = rightBound - width + 1;
     }
 
     public void transformUpperBound(int newUpperBound) {
         upperBound = newUpperBound;
-        lowerBound = upperBound - height;
+        lowerBound = upperBound - height + 1;
     }
 
     public void transformLowerBound(int newLowerBound) {
         lowerBound = newLowerBound;
-        upperBound = lowerBound + height;
+        upperBound = lowerBound + height - 1;
     }
 
     public String toString() {
@@ -198,5 +199,34 @@ public class RectangularObject extends Entity {
 
     public boolean equals(RectangularObject r) {
         return this.leftBound == r.getLeftBound() && this.rightBound == r.getRightBound() && this.upperBound == r.getUpperBound() && this.lowerBound == r.getLowerBound();
+    }
+
+    //creates a rectangle with width centered at coordinate with length going in direction d
+    public static RectangularObject buildRectangleFromPointInDirection(int length, int width, Direction d, Coordinate c) {
+        if(d == Direction.NORTH) {
+            return new RectangularObject(c.getX() - width/2, c.getX() + width/2, c.getY() + length, c.getY());
+        } else if(d == Direction.SOUTH) {
+            return new RectangularObject(c.getX() - width/2, c.getX() + width/2, c.getY(), c.getY() - length);
+        } else if(d == Direction.WEST) {
+            return new RectangularObject(c.getX() - length, c.getX(), c.getY() + width/2, c.getY() - width/2);
+        } else if(d == Direction.EAST) {
+            return new RectangularObject(c.getX(), c.getX() + length, c.getY() + width/2, c.getY() - width/2);
+        }
+
+        return null;
+    }
+
+    public Coordinate getMiddleOfFace(Direction d) {
+        if(d == Direction.NORTH) {
+            return new Coordinate(getLeftBound() + width/2, getUpperBound());
+        } else if(d == Direction.SOUTH) {
+            return new Coordinate(getLeftBound() + width/2, getLowerBound());
+        } else if(d == Direction.WEST) {
+            return new Coordinate(getLeftBound(), getLowerBound() + height/2);
+        } else if(d == Direction.EAST) {
+            return new Coordinate(getRightBound(), getLowerBound() + height/2);
+        }
+
+        return null;
     }
 }

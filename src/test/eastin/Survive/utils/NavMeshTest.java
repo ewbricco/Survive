@@ -1,6 +1,10 @@
 package eastin.Survive.utils;
 
+import eastin.Survive.World;
+import eastin.Survive.manager.Enemies;
+import eastin.Survive.objects.Barrier;
 import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.worldprovider.WorldProviderFactory;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -32,7 +36,18 @@ public class NavMeshTest {
             NavMesh mesh = new NavMesh(mover, obstacles);
         }
 
-        System.out.println("took: " + (System.currentTimeMillis() - start) + " ms.");
+        System.out.println("took: " + (System.currentTimeMillis() - start) + " ms to generate NavMeshes");
+
+        Node node1 = new Node(90, 0);
+        Node node2 = new Node(-1000, -1000);
+
+        long start2 = System.currentTimeMillis();
+        for(int i=0; i<100; i++) {
+            NavMesh mesh = new NavMesh(mover, obstacles);
+        }
+
+        System.out.println("took: " + (System.currentTimeMillis() - start2) + " ms to calculate paths");
+
 
     }
 
@@ -73,6 +88,24 @@ public class NavMeshTest {
         for(Coordinate c:path) {
             System.out.println(c.toString());
         }
+    }
+
+    @Test
+    public void testPathBasic2() {
+
+        World world = new World();
+        world.barriers.getObjects().add(new Barrier(6314, 6494, 575, 534, new Color()));
+
+        world.enemies.addEnemy(new Coordinate(5430, 688));
+
+        world.mc.setBounds(new RectangularObject(6272, 6313, 575, 534));
+
+        World.DoIf doif = new World.RunEveryNth(30, () -> {
+            if(world.enemies.getObjects().size() > 0) {
+                System.out.println(world.enemies.getObjects().get(0).toString());
+            }
+        });
+        world.simulateGameLoop(Arrays.asList(doif), () -> world.enemies.getObjects().size() == 0);
     }
 
 

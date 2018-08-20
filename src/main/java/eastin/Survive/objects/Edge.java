@@ -2,12 +2,14 @@ package eastin.Survive.objects;
 
 import eastin.Survive.utils.Node;
 
+import java.io.Serializable;
+
 /**
  * Created by ebricco on 8/9/18.
  *
  * s to t directional edge of graph
  */
-public class Edge extends Line {
+public class Edge extends Line implements Serializable {
     Node s;
     Node t;
 

@@ -1,10 +1,6 @@
 package eastin.Survive;
 
-import eastin.Survive.managers.Barriers;
-import eastin.Survive.managers.Enemies;
-import eastin.Survive.objects.MainCharacter;
 import eastin.Survive.objects.RectangularObject;
-import eastin.Survive.utils.Coordinate;
 import org.junit.Test;
 
 import java.io.File;

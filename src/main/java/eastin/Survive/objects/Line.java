@@ -52,8 +52,8 @@ public class Line extends Entity {
 
         if(Double.isInfinite(getSlope())) {
 
-            System.out.println(s.getX() >= r.getLeftBound());
-            System.out.println(s.getX() <= r.getRightBound());
+            //System.out.println(s.getX() >= r.getLeftBound());
+            //System.out.println(s.getX() <= r.getRightBound());
 
             if(s.getX() >= r.getLeftBound() && s.getX() <= r.getRightBound()) {
                 return true;

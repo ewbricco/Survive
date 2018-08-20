@@ -1,10 +1,8 @@
 package eastin.Survive.objects;
 
-import eastin.Survive.Runner;
-import eastin.Survive.objects.RectangularObject;
-import eastin.Survive.utils.Color;
-import eastin.Survive.utils.Coordinate;
-import eastin.Survive.utils.GameCoordinate;
+import eastin.Survive.utils.*;
+import eastin.Survive.worldprovider.WorldProvider;
+import eastin.Survive.worldprovider.WorldProviderFactory;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -14,19 +12,21 @@ import static org.lwjgl.opengl.GL11.*;
 public class RenderableRectangle extends RectangularObject {
     protected Color color;
 
+    protected static WorldProvider worldProvider = WorldProviderFactory.getWorldProvider();
+
     public RenderableRectangle(int leftBound, int rightBound, int upperBound, int lowerBound, Color color) {
         super(leftBound, rightBound, upperBound, lowerBound);
         this.color = color;
     }
 
-    public RenderableRectangle(GameCoordinate coord, int width, int height, Color color) {
+    public RenderableRectangle(Coordinate coord, int width, int height, Color color) {
         super(coord, width, height);
         this.color = color;
     }
 
     //if any portion of the object is in the screen, render and return true
     public boolean checkPositionAndRender() {
-        RectangularObject screen = Runner.world.mc.getScreen();
+        RectangularObject screen = worldProvider.getWorld().mc.getScreen();
 
         if(!this.overlapsWith(screen)) {
             return false;

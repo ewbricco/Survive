@@ -1,14 +1,7 @@
 package eastin.Survive.objects;
 
-import eastin.Survive.Runner;
 import eastin.Survive.World;
-import eastin.Survive.managers.Barriers;
-import eastin.Survive.managers.Enemies;
-import eastin.Survive.utils.Color;
-import eastin.Survive.utils.Direction;
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.GLFW.*;
@@ -39,7 +32,7 @@ public class EnemyTest {
             begin = System.currentTimeMillis();
 
             world.mc.update();
-            world.enemies.update(world.mc.getCenter());
+            world.enemies.update();
 
             int enemyRight = world.enemies.objects.get(0).getRightBound();
             int mcRight = world.mc.getRightBound();
@@ -50,7 +43,7 @@ public class EnemyTest {
                 previousDistance = distance;
             }
 
-            assert(Math.abs(previousDistance - distance) < 15);
+            assert(Math.abs(previousDistance - distance) < 200); //TODO choose bound
 
             previousDistance = distance;
 
@@ -62,5 +55,9 @@ public class EnemyTest {
             }
         }
 
+    }
+
+    public void movementTest() {
+        World world = new World();
     }
 }

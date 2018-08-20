@@ -1,7 +1,4 @@
-import eastin.Survive.objects.MainCharacter;
-
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by ebricco on 7/26/18.

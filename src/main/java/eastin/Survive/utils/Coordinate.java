@@ -1,9 +1,11 @@
 package eastin.Survive.utils;
 
+import java.io.Serializable;
+
 /**
  * Created by ebricco on 9/30/17.
  */
-public class Coordinate {
+public class Coordinate implements Serializable {
     protected int x;
     protected int y;
 

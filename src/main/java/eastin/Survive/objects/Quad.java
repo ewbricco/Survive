@@ -2,12 +2,14 @@ package eastin.Survive.objects;
 
 import eastin.Survive.utils.Coordinate;
 
+import java.io.Serializable;
+
 /**
  * Created by ebricco on 8/9/18.
  *
  * rotatable quadrilateral
  */
-public class Quad extends Entity {
+public class Quad extends Entity implements Serializable {
 
     Line left;
     Line right;
