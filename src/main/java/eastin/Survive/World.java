@@ -2,8 +2,6 @@ package eastin.Survive;
 
 import eastin.Survive.manager.*;
 import eastin.Survive.manager.MainCharacter;
-import eastin.Survive.worldprovider.WorldProvider;
-import eastin.Survive.worldprovider.WorldProviderFactory;
 
 import java.io.*;
 import java.util.*;
@@ -18,8 +16,10 @@ import static org.lwjgl.glfw.GLFW.*;
  *
  * TODO resolve unification of concerns, world shouldn't be a world provider. Maybe there should be a WorldManager?
  */
-public class World implements Serializable, WorldProvider {
+public class World implements Serializable {
     static final long serialVersionUID=1L;
+
+    public static World world;
 
     public MainCharacter mc;
     public Barriers barriers;
@@ -34,7 +34,7 @@ public class World implements Serializable, WorldProvider {
     private static String fileName = null;
 
     public World() {
-        WorldProviderFactory.getWorldProvider().setWorldProvider(this);
+        world = this;
 
         mc = new MainCharacter();
         barriers = new Barriers();
@@ -174,11 +174,13 @@ public class World implements Serializable, WorldProvider {
             System.out.println(ex.toString());
         }
 
-        WorldProviderFactory.getWorldProvider().setWorldProvider(world);
+        World.world = world;
 
         return world;
     }
 
+
+    //for testing
     public void simulateGameLoop(List<DoIf> doifs, EndIf endCondition) {
         long start;
         while(!endCondition.test()) {

@@ -1,7 +1,5 @@
 package eastin.Survive;
 
-import eastin.Survive.worldprovider.WorldProvider;
-import eastin.Survive.worldprovider.WorldProviderFactory;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
@@ -13,7 +11,6 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Runner {
     public long window;
-    protected WorldProvider worldProvider;
     public static Runner runner;
 
     public static void main(String[] args) {
@@ -21,7 +18,6 @@ public class Runner {
         runner = new Runner();
 
         World.createWorld();
-        runner.worldProvider = WorldProviderFactory.getWorldProvider();
 
         try {
             runner.initGLFW();
@@ -54,7 +50,7 @@ public class Runner {
                 glfwSetWindowShouldClose(window, true);
             } else{
                 //pass key and action to barriers' movement method
-                worldProvider.getWorld().handleInput(key, action);
+                World.world.handleInput(key, action);
             }
         });
 
@@ -91,15 +87,15 @@ public class Runner {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            worldProvider.getWorld().update();
+            World.world.update();
 
             glfwPollEvents();
 
-            while(worldProvider.getWorld().paused) {
+            while(World.world.paused) {
                 glfwPollEvents();
             }
 
-            worldProvider.getWorld().render();
+            World.world.render();
 
             swapStart = System.currentTimeMillis();
             glfwSwapBuffers(window); // swap the color buffers

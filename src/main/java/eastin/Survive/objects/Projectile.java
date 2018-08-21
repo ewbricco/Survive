@@ -1,5 +1,6 @@
 package eastin.Survive.objects;
 
+import eastin.Survive.World;
 import eastin.Survive.utils.Color;
 import eastin.Survive.utils.Coordinate;
 import eastin.Survive.utils.Direction;
@@ -40,8 +41,8 @@ public class Projectile extends MovingRectangle {
 
         List<RectangularObject> interactables = new ArrayList<>();
 
-        worldProvider.getWorld().barriers.getObjects().forEach(b -> interactables.add(b));
-        worldProvider.getWorld().enemies.getObjects().forEach(e -> interactables.add(e));
+        World.world.barriers.getObjects().forEach(b -> interactables.add(b));
+        World.world.enemies.getObjects().forEach(e -> interactables.add(e));
 
 
         handleCollision(move(direction, movementDistance, interactables));

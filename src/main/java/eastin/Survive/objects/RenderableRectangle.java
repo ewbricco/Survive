@@ -1,8 +1,7 @@
 package eastin.Survive.objects;
 
+import eastin.Survive.World;
 import eastin.Survive.utils.*;
-import eastin.Survive.worldprovider.WorldProvider;
-import eastin.Survive.worldprovider.WorldProviderFactory;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -11,8 +10,6 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class RenderableRectangle extends RectangularObject {
     protected Color color;
-
-    protected static WorldProvider worldProvider = WorldProviderFactory.getWorldProvider();
 
     public RenderableRectangle(int leftBound, int rightBound, int upperBound, int lowerBound, Color color) {
         super(leftBound, rightBound, upperBound, lowerBound);
@@ -26,7 +23,7 @@ public class RenderableRectangle extends RectangularObject {
 
     //if any portion of the object is in the screen, render and return true
     public boolean checkPositionAndRender() {
-        RectangularObject screen = worldProvider.getWorld().mc.getScreen();
+        RectangularObject screen = World.world.mc.getScreen();
 
         if(!this.overlapsWith(screen)) {
             return false;

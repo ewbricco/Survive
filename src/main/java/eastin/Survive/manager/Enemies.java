@@ -1,11 +1,10 @@
 package eastin.Survive.manager;
 
 import eastin.Survive.GameState;
+import eastin.Survive.World;
 import eastin.Survive.objects.Enemy;
 import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.utils.*;
-import eastin.Survive.worldprovider.WorldProvider;
-import eastin.Survive.worldprovider.WorldProviderFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,8 +31,6 @@ public class Enemies implements Manager, Serializable {
 
     private final Coordinate STARTINGPOSITION = new Coordinate(250, 450);
 
-    protected WorldProvider worldProvider = WorldProviderFactory.getWorldProvider();
-
     public Enemies(){
         objects = new ArrayList<>();
         //objects.add(new Enemy(STARTINGPOSITION.getX(), STARTINGPOSITION.getX() + SIZE, STARTINGPOSITION.getY() + SIZE, STARTINGPOSITION.getY(), COLOR));
@@ -55,14 +52,14 @@ public class Enemies implements Manager, Serializable {
     public void move(Coordinate target) {
         objects.removeIf(enemy -> enemy.toDespawn);
         objects.forEach(object -> {
-            object.update(target, Arrays.asList(worldProvider.getWorld().mc), nav);
+            object.update(target, Arrays.asList(World.world.getWorld().mc), nav);
         });
     }
 
     private void createNewEnemy() {
         //System.out.println("creating new Enemy");
 
-        Coordinate c = worldProvider.getWorld().mc.getCenter();
+        Coordinate c = World.world.mc.getCenter();
 
         //System.out.println("mc center: " + Runner.mc.getCenter().toString());
 
@@ -92,14 +89,14 @@ public class Enemies implements Manager, Serializable {
     public void update(){
 
         if(System.currentTimeMillis() - lastNavRefresh > TIMEBETWEENNAVREFRESH && objects.size() > 0) {
-            nav = new NavMesh(new RectangularObject(0, SIZE, SIZE, 0), worldProvider.getWorld().barriers.getObjects());
+            nav = new NavMesh(new RectangularObject(0, SIZE, SIZE, 0), World.world.barriers.getObjects());
             lastNavRefresh = System.currentTimeMillis();
         }
 
-        move(worldProvider.getWorld().mc.getCenter());
+        move(World.world.getWorld().mc.getCenter());
 
 
-        if(System.nanoTime() / 1000000 - lastSpawn > TIMEBETWEENSPAWNS && worldProvider.getWorld().spawning) {
+        if(System.nanoTime() / 1000000 - lastSpawn > TIMEBETWEENSPAWNS && World.world.getWorld().spawning) {
             createNewEnemy();
             lastSpawn = System.nanoTime() / 1000000;
         }

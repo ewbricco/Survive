@@ -1,11 +1,10 @@
 package eastin.Survive.manager;
 
 import eastin.Survive.GameState;
+import eastin.Survive.World;
 import eastin.Survive.objects.MovingRectangle;
 import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.utils.*;
-import eastin.Survive.worldprovider.WorldProvider;
-import eastin.Survive.worldprovider.WorldProviderFactory;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -31,8 +30,6 @@ public class MainCharacter extends MovingRectangle implements Manager {
 
     private final static long TIMEBETWEENFIRING = 1000;
 
-    private WorldProvider worldProvider = WorldProviderFactory.getWorldProvider();
-
     public MainCharacter(){
         super(STARTPOINTX, STARTPOINTX + WIDTH, STARTPOINTY + HEIGHT, STARTPOINTY, defaultColor);
         health = 5;
@@ -56,7 +53,7 @@ public class MainCharacter extends MovingRectangle implements Manager {
     //add barriers for other directions
     public void checkInput(int key, int action){
 
-        if(worldProvider.getWorld().paused) {
+        if(World.world.paused) {
             return;
         }
 
@@ -98,7 +95,7 @@ public class MainCharacter extends MovingRectangle implements Manager {
     }
 
     private void fireProjectile() {
-        worldProvider.getWorld().projectiles.addNewProjectile(facing, getMiddleOfFace(facing));
+        World.world.projectiles.addNewProjectile(facing, getMiddleOfFace(facing));
     }
 
     public void update(){
@@ -107,7 +104,7 @@ public class MainCharacter extends MovingRectangle implements Manager {
 
 
         if(direction != null) {
-            move(direction, movementDistance, worldProvider.getWorld().barriers.getObjects());
+            move(direction, movementDistance, World.world.barriers.getObjects());
         }
 
         if(firing) {

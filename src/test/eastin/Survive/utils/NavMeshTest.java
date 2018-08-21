@@ -1,10 +1,8 @@
 package eastin.Survive.utils;
 
 import eastin.Survive.World;
-import eastin.Survive.manager.Enemies;
 import eastin.Survive.objects.Barrier;
 import eastin.Survive.objects.RectangularObject;
-import eastin.Survive.worldprovider.WorldProviderFactory;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,10 +1,9 @@
 package eastin.Survive.manager;
 
+import eastin.Survive.World;
 import eastin.Survive.objects.Projectile;
 import eastin.Survive.utils.Coordinate;
 import eastin.Survive.utils.Direction;
-import eastin.Survive.worldprovider.WorldProvider;
-import eastin.Survive.worldprovider.WorldProviderFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,8 +18,6 @@ public class Projectiles implements Manager, Serializable {
     private final long TIMEBETWEENTRIMS = 6000;
     private long lastTrim;
     private long pausedAt;
-
-    protected WorldProvider worldProvider = WorldProviderFactory.getWorldProvider();
 
     public Projectiles() {
         objects = new ArrayList<>();
@@ -41,7 +38,7 @@ public class Projectiles implements Manager, Serializable {
 
     public void trim() {
         objects.forEach(p -> {
-            if(!p.overlapsWith(worldProvider.getWorld().mc.getScreen())) {
+            if(!p.overlapsWith(World.world.mc.getScreen())) {
                 p.toDespawn = true;
             }
         });

@@ -1,12 +1,11 @@
 package eastin.Survive.manager;
 
 import eastin.Survive.GameState;
+import eastin.Survive.World;
 import eastin.Survive.objects.Barrier;
 import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.objects.RenderableRectangle;
 import eastin.Survive.utils.*;
-import eastin.Survive.worldprovider.WorldProvider;
-import eastin.Survive.worldprovider.WorldProviderFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,8 +29,6 @@ public class Barriers implements Manager, Serializable {
 
     static int renderCount = 0;
 
-    protected static WorldProvider worldProvider = WorldProviderFactory.getWorldProvider();
-
     public Barriers() {
         objects = new ArrayList<>();
         Coordinate screenCenter = new Coordinate(MainCharacter.STARTPOINTX, MainCharacter.STARTPOINTY);
@@ -46,7 +43,7 @@ public class Barriers implements Manager, Serializable {
         //System.out.println(center.toString());
 
         //check which frontiers are too close to the game center
-        modifyFrontiers(frontier.getDistancesToPoint(worldProvider.getWorld().mc.getCenter()));
+        modifyFrontiers(frontier.getDistancesToPoint(World.world.mc.getCenter()));
     }
 
     public void render() {
