@@ -7,6 +7,7 @@ import eastin.Survive.utils.NavMesh;
 import eastin.Survive.utils.Node;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
@@ -22,7 +23,7 @@ public class Enemy extends MovingRectangle {
     public List<Coordinate> path;
     public int positionInPath; //enemy is at or past this position in path
     private long lastPathUpdate;
-    public static long TIMEBETWEENPATHUPDATE = 100;
+    public static long TIMEBETWEENPATHUPDATE = 50;
     private int health;
 
     public boolean toDespawn;
@@ -35,6 +36,9 @@ public class Enemy extends MovingRectangle {
     }
 
     public void update(RectangularObject target, List<? extends RectangularObject> interactables, NavMesh nav) {
+        interactables = new ArrayList<RectangularObject>(interactables);
+        interactables.remove(this);
+        
         int movementDistance = (int)(SPEED * ((double)(System.nanoTime()/1000000 - lastMovement) / 1000d));
         lastMovement = System.nanoTime() / 1000000;
 

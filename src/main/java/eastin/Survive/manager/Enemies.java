@@ -68,8 +68,13 @@ public class Enemies implements Manager, Serializable {
         /*List<RectangularObject> interactables = new ArrayList<RectangularObject>();
         interactables.addAll(World.world.getWorld().barriers.getObjects());
         interactables.add(World.world.mc);*/
+
+        List<RectangularObject> interactables = new ArrayList<>();
+        interactables.addAll(objects);
+        interactables.add(World.world.mc);
+
         objects.forEach(object -> {
-            object.update(target, Arrays.asList(World.world.mc), nav); //doesn't need to interact with barriers if routing is working correctly
+            object.update(target, interactables, nav); //doesn't need to interact with barriers if routing is working correctly
         });
     }
 
