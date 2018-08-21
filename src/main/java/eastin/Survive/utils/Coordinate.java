@@ -1,11 +1,14 @@
 package eastin.Survive.utils;
 
+import eastin.Survive.objects.Entity;
+import eastin.Survive.objects.RectangularObject;
+
 import java.io.Serializable;
 
 /**
  * Created by ebricco on 9/30/17.
  */
-public class Coordinate implements Serializable {
+public class Coordinate extends Entity implements Serializable {
     protected int x;
     protected int y;
 
@@ -125,6 +128,24 @@ public class Coordinate implements Serializable {
     public double findAngle() {
         //TODO
         return 0d;
+    }
+
+    public boolean overlapsWith(RectangularObject r) {
+        if(x >= r.getLeftBound() && x <= r.getRightBound() && y <= r.getUpperBound() && y >= r.getLowerBound()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean overlapsWith(Entity e) {
+        if(e instanceof Coordinate) {
+            return equals(e);
+        } else if(e instanceof RectangularObject) {
+            return overlapsWith((RectangularObject)e);
+        }
+
+        return false;
     }
 }
 

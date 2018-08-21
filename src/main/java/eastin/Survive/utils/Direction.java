@@ -11,14 +11,11 @@ public enum Direction implements Serializable {
     public Direction getOpposite() {
         if(this.name().equals("NORTH")) {
             return SOUTH;
-        }
-        else if(this.name().equals("SOUTH")) {
+        } else if(this.name().equals("SOUTH")) {
             return NORTH;
-        }
-        else if(this.name().equals("WEST")) {
+        } else if(this.name().equals("WEST")) {
             return EAST;
-        }
-        else if(this.name().equals("EAST")) {
+        } else if(this.name().equals("EAST")) {
             return WEST;
         }
 

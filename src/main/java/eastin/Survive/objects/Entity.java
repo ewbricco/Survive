@@ -7,5 +7,5 @@ import java.io.Serializable;
  */
 public abstract class Entity implements Serializable {
 
-    abstract boolean overlapsWith(Entity e);
+    public abstract boolean overlapsWith(Entity e);
 }

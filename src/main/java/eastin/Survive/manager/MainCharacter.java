@@ -2,9 +2,13 @@ package eastin.Survive.manager;
 
 import eastin.Survive.GameState;
 import eastin.Survive.World;
+import eastin.Survive.objects.Enemy;
 import eastin.Survive.objects.MovingRectangle;
 import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.utils.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -104,7 +108,11 @@ public class MainCharacter extends MovingRectangle implements Manager {
 
 
         if(direction != null) {
-            move(direction, movementDistance, World.world.barriers.getObjects());
+            List<RectangularObject> interactables = new ArrayList<>();
+            interactables.addAll(World.world.barriers.getObjects());
+            interactables.addAll(World.world.enemies.getObjects());
+
+            handleCollision(move(direction, movementDistance, interactables));
         }
 
         if(firing) {
@@ -112,6 +120,13 @@ public class MainCharacter extends MovingRectangle implements Manager {
                 fireProjectile();
                 lastFire = System.currentTimeMillis();
             }
+        }
+    }
+
+    private void handleCollision(RectangularObject object) {
+        if(object instanceof Enemy) {
+            ((Enemy)object).takeDamage(1);
+            takeDamage(1);
         }
     }
 

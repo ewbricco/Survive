@@ -62,7 +62,7 @@ public class MovingRectangle extends RenderableRectangle {
         return collisionObject;
     }
 
-    public RectangularObject move(Coordinate diff, List<RectangularObject> interactables) {
+    public RectangularObject move(Coordinate diff, List<? extends RectangularObject> interactables) {
 
         RectangularObject collisionObject = null;
         RectangularObject next;
@@ -112,10 +112,10 @@ public class MovingRectangle extends RenderableRectangle {
         return null;
     }
 
-    public RectangularObject seek(Coordinate target, int distance, List<RectangularObject> interactables) {
+    public RectangularObject seek(Coordinate target, int distance, List<? extends RectangularObject> interactables) {
         //System.out.println("target: " + target.toString());
         //System.out.println("center: " + getCenter());
-        Coordinate diff = Coordinate.difference(target, getCenter());
+        Coordinate diff = Coordinate.difference(target, getBottomLeft());
         diff.pythagoreanScale(distance);
         //System.out.println(diff.toString());
         return move(diff, interactables);

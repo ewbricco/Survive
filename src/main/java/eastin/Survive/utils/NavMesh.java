@@ -116,7 +116,7 @@ public class NavMesh implements Serializable {
         return sum;
     }
 
-    public List<Coordinate> getPath(Node s, Node t) {
+    List<Coordinate> getPath(Node s, Node t) {
 
         //System.out.println("getting path from mesh with edge count: " + computeNumberOfEdges());
 
@@ -224,13 +224,45 @@ public class NavMesh implements Serializable {
         Collections.reverse(path);
 
 
-        if(!path.get(0).equals(s)) {
+        if(!path.get(path.size()-1).equals(t)) {
            //System.out.println("no path found");
-            return null;
+            return new ArrayList<Coordinate>();
         }
 
 
         return path;
+    }
+
+    public void render() {
+        for(Node n:nodes) {
+            for(Edge e:n.getEdges()) {
+                e.render();
+            }
+        }
+    }
+
+    public List<Coordinate> getPath(RectangularObject mover, RectangularObject target) {
+        Coordinate bottomLeft = target.getBottomLeft();
+
+        boolean possible = true;
+        for(RectangularObject r:constraints) {
+            if (bottomLeft.overlapsWith(r)) {
+                possible = false;
+                break;
+            }
+        }
+
+        if(possible) {
+            return getPath(new Node(mover.getBottomLeft()), new Node(target.getBottomLeft()));
+        }
+
+        //else return bottom left target where topRight of mover = topRight of target
+        Coordinate adjustedTarget = target.getTopRight();
+
+        adjustedTarget.addX(1-mover.getWidth());
+        adjustedTarget.addY(1-mover.getHeight());
+
+        return getPath(new Node(mover.getBottomLeft()), new Node(adjustedTarget));
     }
 
     public void resetMesh() {

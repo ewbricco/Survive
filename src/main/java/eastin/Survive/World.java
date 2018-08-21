@@ -29,7 +29,9 @@ public class World implements Serializable {
     private List<Manager> managers;
 
     public boolean paused = false;
-    public boolean spawning = false;
+    public static boolean spawningEnemies = false;
+    public static boolean spawningBarriers = true;
+    public static boolean renderNav = false;
 
     private static String fileName = null;
 
@@ -66,7 +68,7 @@ public class World implements Serializable {
         } else if(key == GLFW_KEY_F && action == GLFW_PRESS) {
             saveToFile();
         } else if(key == GLFW_KEY_E && action == GLFW_PRESS) {
-            spawning = !spawning;
+            spawningEnemies = !spawningEnemies;
         }
 
         else if(key == GLFW_KEY_1 && action == GLFW_PRESS) {
@@ -85,8 +87,12 @@ public class World implements Serializable {
             System.out.println("closest barrier: " + barriers.getClosest(mc.getCenter()));
         }
 
-        else if(key == GLFW_KEY_4) {
+        else if(key == GLFW_KEY_4 && action == GLFW_RELEASE) {
             enemies.getObjects().forEach(e -> System.out.println("enemy: " + e.toString()));
+        }
+
+        else if(key == GLFW_KEY_N && action == GLFW_RELEASE) {
+            renderNav = !renderNav;
         }
 
         if(!paused) {
@@ -181,7 +187,7 @@ public class World implements Serializable {
 
 
     //for testing
-    public void simulateGameLoop(List<DoIf> doifs, EndIf endCondition) {
+    public void simulateGameLoop(List<Runner.DoIf> doifs, Runner.EndIf endCondition) {
         long start;
         while(!endCondition.test()) {
             start = System.currentTimeMillis();
@@ -199,32 +205,5 @@ public class World implements Serializable {
 
     public void simulateGameLoop() {
         simulateGameLoop(new ArrayList<>(), () -> false);
-    }
-
-    public static class RunEveryNth implements DoIf {
-        private int n;
-        private int i;
-        private Runnable action;
-
-        public RunEveryNth(int n, Runnable action) {
-            this.n = n;
-            this.action = action;
-            i=1;
-        }
-
-        public void attempt() {
-            if(i%n == 0) {
-                action.run();
-            }
-            i++;
-        }
-    }
-
-    public interface DoIf {
-        void attempt();
-    }
-
-    public interface EndIf {
-        boolean test();
     }
 }

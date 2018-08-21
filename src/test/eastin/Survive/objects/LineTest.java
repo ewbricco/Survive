@@ -1,5 +1,6 @@
 package eastin.Survive.objects;
 
+import eastin.Survive.utils.Coordinate;
 import eastin.Survive.utils.Node;
 import org.junit.Test;
 
@@ -77,6 +78,15 @@ public class LineTest {
     public void overlappingDiagonal() {
         Line l1 = new Line(new Node(101,101), new Node(-5,-5));
         RectangularObject r1 = new RectangularObject(0, 100, 100, 0);
+
+        assert(l1.overlapsWith(r1));
+        assert(r1.overlapsWith(l1));
+    }
+
+    @Test
+    public void overlappingRealCase() {
+        Line l1 = new Line(new Coordinate(994,249), new Coordinate(1152,169));
+        RectangularObject r1 = new RectangularObject(996, 1151, 326, 171);
 
         assert(l1.overlapsWith(r1));
         assert(r1.overlapsWith(l1));

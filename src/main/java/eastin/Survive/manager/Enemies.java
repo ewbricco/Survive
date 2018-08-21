@@ -29,7 +29,7 @@ public class Enemies implements Manager, Serializable {
     private long lastNavRefresh;
     private long pausedAt;
 
-    private final Coordinate STARTINGPOSITION = new Coordinate(250, 450);
+    private static final Coordinate STARTINGPOSITION = new Coordinate(250, 450);
 
     public Enemies(){
         objects = new ArrayList<>();
@@ -46,13 +46,20 @@ public class Enemies implements Manager, Serializable {
         objects.stream().forEach(object -> {
             object.checkPositionAndRender();
         });
+
+        if(World.world.renderNav) {
+            nav.render();
+        }
     }
 
     //seeks target
-    public void move(Coordinate target) {
+    public void move(RectangularObject target) {
         objects.removeIf(enemy -> enemy.toDespawn);
+        /*List<RectangularObject> interactables = new ArrayList<RectangularObject>();
+        interactables.addAll(World.world.getWorld().barriers.getObjects());
+        interactables.add(World.world.mc);*/
         objects.forEach(object -> {
-            object.update(target, Arrays.asList(World.world.getWorld().mc), nav);
+            object.update(target, Arrays.asList(World.world.mc), nav); //doesn't need to interact with barriers if routing is working correctly
         });
     }
 
@@ -93,10 +100,10 @@ public class Enemies implements Manager, Serializable {
             lastNavRefresh = System.currentTimeMillis();
         }
 
-        move(World.world.getWorld().mc.getCenter());
+        move(World.world.getWorld().mc);
 
 
-        if(System.nanoTime() / 1000000 - lastSpawn > TIMEBETWEENSPAWNS && World.world.getWorld().spawning) {
+        if(System.nanoTime() / 1000000 - lastSpawn > TIMEBETWEENSPAWNS && World.world.getWorld().spawningEnemies) {
             createNewEnemy();
             lastSpawn = System.nanoTime() / 1000000;
         }

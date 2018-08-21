@@ -43,7 +43,10 @@ public class Barriers implements Manager, Serializable {
         //System.out.println(center.toString());
 
         //check which frontiers are too close to the game center
-        modifyFrontiers(frontier.getDistancesToPoint(World.world.mc.getCenter()));
+
+        if(World.spawningBarriers) {
+            modifyFrontiers(frontier.getDistancesToPoint(World.world.mc.getCenter()));
+        }
     }
 
     public void render() {
@@ -139,6 +142,7 @@ public class Barriers implements Manager, Serializable {
 
     //create num barriers in area
     private void createBarriers(RectangularObject area, int num) {
+
         //create new barriers
         for (int i = 0; i < num; i++) {
 

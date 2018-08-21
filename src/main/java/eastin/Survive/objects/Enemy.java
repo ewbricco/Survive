@@ -8,6 +8,7 @@ import eastin.Survive.utils.Node;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by ebricco on 7/27/18.
@@ -19,8 +20,9 @@ public class Enemy extends MovingRectangle {
 
     private long lastMovement;
     public List<Coordinate> path;
+    public int positionInPath; //enemy is at or past this position in path
     private long lastPathUpdate;
-    private final long TIMEBETWEENPATHUPDATE = 100;
+    public static long TIMEBETWEENPATHUPDATE = 100;
     private int health;
 
     public boolean toDespawn;
@@ -32,19 +34,22 @@ public class Enemy extends MovingRectangle {
         health = INITIALHEALTH;
     }
 
-    public void update(Coordinate target, List<RectangularObject> interactables, NavMesh nav) {
+    public void update(RectangularObject target, List<? extends RectangularObject> interactables, NavMesh nav) {
         int movementDistance = (int)(SPEED * ((double)(System.nanoTime()/1000000 - lastMovement) / 1000d));
         lastMovement = System.nanoTime() / 1000000;
 
         if(System.currentTimeMillis() - lastPathUpdate > TIMEBETWEENPATHUPDATE) {
-            path = nav.getPath(new Node(getBottomLeft()), new Node(target));
+            path = nav.getPath(this, target);
+            positionInPath = 0;
+            lastPathUpdate = System.currentTimeMillis();
         }
 
-        for(int i=0; i<path.size()-1; i++) {
-            double stepDistance = path.get(i).distanceTo(path.get(i+1));
-            if(stepDistance < movementDistance) {
+        for(int i=positionInPath; i<path.size()-1; i++) {
+            double stepDistance = getBottomLeft().distanceTo(path.get(i+1));
+            if(stepDistance <= movementDistance) {
                 handleCollision(seek(path.get(i+1), (int)stepDistance, interactables));
                 movementDistance -= stepDistance;
+                positionInPath++;
             } else {
                 handleCollision(seek(path.get(i+1), movementDistance, interactables));
                 break;

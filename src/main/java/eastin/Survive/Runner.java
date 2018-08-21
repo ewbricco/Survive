@@ -95,9 +95,7 @@ public class Runner {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            world.update();
-
-            doifs.forEach(doIf -> doIf.attempt());
+            updateWorld(world, doifs);
 
             glfwPollEvents();
 
@@ -120,6 +118,30 @@ public class Runner {
                 System.out.println("swap: " + swapTimer);
 
                 swapTimer = 0;
+            }
+        }
+    }
+
+    private static void updateWorld(World world, List<DoIf> doifs) {
+        world.update();
+
+        doifs.forEach(doIf -> doIf.attempt());
+    }
+
+    public static void simulateLoop(World world, List<DoIf> doifs, EndIf endCondition) {
+        while (!endCondition.test()) {
+
+            long start = System.currentTimeMillis();
+
+            updateWorld(world, doifs);
+
+            long toSleep = GameState.MILLISPERFRAME - (System.currentTimeMillis() - start);
+            toSleep = Math.max(0, toSleep);
+
+            try {
+                Thread.sleep(toSleep);
+            } catch(InterruptedException e) {
+                System.out.println(e.toString());
             }
         }
     }

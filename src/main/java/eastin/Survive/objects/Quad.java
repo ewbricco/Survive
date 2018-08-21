@@ -33,7 +33,7 @@ public class Quad extends Entity implements Serializable {
     }
 
     @Override
-    boolean overlapsWith(Entity e) {
+    public boolean overlapsWith(Entity e) {
         return false;
     }
 }

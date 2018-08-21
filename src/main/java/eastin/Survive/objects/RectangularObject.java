@@ -4,6 +4,7 @@ import eastin.Survive.utils.*;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,6 +49,18 @@ public class RectangularObject extends Entity {
         return new Coordinate(leftBound, lowerBound);
     }
 
+    public Coordinate getTopLeft() {
+        return new Coordinate(leftBound, upperBound);
+    }
+
+    public Coordinate getBottomRight() {
+        return new Coordinate(rightBound, lowerBound);
+    }
+
+    public Coordinate getTopRight() {
+        return new Coordinate(rightBound, upperBound);
+    }
+
     public int getSize() {
         return Math.max(getWidth(), getHeight());
     }
@@ -90,6 +103,8 @@ public class RectangularObject extends Entity {
             return overlapsWith((RectangularObject)e);
         } else if(e instanceof Line) {
             return ((Line)e).overlapsWith(this);
+        } else if(e instanceof Coordinate) {
+
         }
 
         return false;
@@ -225,6 +240,55 @@ public class RectangularObject extends Entity {
             return new Coordinate(getLeftBound(), getLowerBound() + height/2);
         } else if(d == Direction.EAST) {
             return new Coordinate(getRightBound(), getLowerBound() + height/2);
+        }
+
+        return null;
+    }
+
+    public Coordinate getClosestCorner(Coordinate c) {
+        double min;
+        Coordinate closestCorner;
+
+        Coordinate i;
+        double cur;
+
+        i = getBottomLeft();
+        min = i.distanceTo(c);
+        closestCorner = i;
+
+        //go through each corner
+        i = getTopLeft();
+        cur = i.distanceTo(c);
+        if(cur < min) {
+            closestCorner = i;
+        }
+
+        //go through each corner
+        i = getTopRight();
+        cur = i.distanceTo(c);
+        if(cur < min) {
+            closestCorner = i;
+        }
+
+        //go through each corner
+        i = getBottomLeft();
+        cur = i.distanceTo(c);
+        if(cur < min) {
+            closestCorner = i;
+        }
+
+        return closestCorner;
+    }
+
+    public Coordinate getCorner(Corner c) {
+        if(c == Corner.BOTTOMLEFT) {
+            return getBottomLeft();
+        } else if(c == Corner.TOPLEFT) {
+            return getTopLeft();
+        } else if(c == Corner.TOPRIGHT) {
+            return getTopRight();
+        } else if(c == Corner.BOTTOMLEFT) {
+            return getBottomLeft();
         }
 
         return null;

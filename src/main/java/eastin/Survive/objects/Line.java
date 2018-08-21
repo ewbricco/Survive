@@ -1,6 +1,10 @@
 package eastin.Survive.objects;
 
+import eastin.Survive.World;
+import eastin.Survive.utils.Color;
 import eastin.Survive.utils.Coordinate;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by ebricco on 8/7/18.
@@ -44,6 +48,7 @@ public class Line extends Entity {
     }
 
 
+    //TODO account for infinite slope
     public boolean overlapsWith(RectangularObject r) {
 
         if(!r.overlapsWith(getEnclosingRect())) {
@@ -66,10 +71,10 @@ public class Line extends Entity {
         int rightY = (int)getYAt(r.getRightBound());
 
 
-        //if crosses upper bound, crosses lower bound, or stays between OR line is vertical and slope is finite and the x value is between left and right return true
+        //if line crosses upper bound, line crosses lower bound, or line stays between OR line is vertical and slope is finite and the x value is between left and right return true
         //crosses bound if starts higher and goes lower or starts lower and goes higher
         if(leftY >= r.getUpperBound() && rightY <= r.getUpperBound() || leftY <= r.getUpperBound() && rightY >= r.getUpperBound()
-                || leftY <= r.getUpperBound() && leftY >= r.getLowerBound() && rightY <= r.getUpperBound() && rightY >= r.getLowerBound()
+                || leftY <= r.getUpperBound() && leftY >= r.getLowerBound() || rightY <= r.getUpperBound() && rightY >= r.getLowerBound()
                 || leftY >= r.getUpperBound() && rightY <= r.getLowerBound() || leftY <= r.getLowerBound() && rightY >= r.getLowerBound()) {
             return true;
         }
@@ -136,5 +141,17 @@ public class Line extends Entity {
     @Override
     public String toString() {
         return "line with " + s.toString() + " and " + t.toString();
+    }
+
+    public void render() {
+        Coordinate screenBottomLeft = World.world.mc.getScreen().getBottomLeft();
+        Color color = new Color(0,0,1);
+        color.setColor();
+        glBegin(GL_LINE_STRIP);
+        {
+            glVertex2f(s.getX()-screenBottomLeft.getX(),s.getY()-screenBottomLeft.getY());
+            glVertex2f(t.getX()-screenBottomLeft.getX(),t.getY()-screenBottomLeft.getY());
+        }
+        glEnd();
     }
 }

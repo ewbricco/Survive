@@ -15,4 +15,6 @@ each log line also has a log state number and that way will be turned on if any 
 
 
 
+-Djava.library.path=/Users/ebricco/Programming/survive/libs -XstartOnFirstThread
+
 
