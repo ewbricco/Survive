@@ -3,6 +3,9 @@ package eastin.Survive;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -13,17 +16,20 @@ public class Runner {
     public static long window;
 
     public static void main(String[] args) {
-
         World.createWorld();
 
-        run(() -> loop());
+        run(World.world);
     }
 
-    public static void run(Loop loop) {
+    public static void run(World world) {
+        run(world, new ArrayList<>(), () -> false);
+    }
+
+    public static void run(World world, List<DoIf> doifs, EndIf endCondition) {
         try {
-            initGLFW();
+            initGLFW(world);
             initGL();
-            loop.loop();
+            loop(world, doifs, endCondition);
             glfwFreeCallbacks(window);
             glfwDestroyWindow(window);
         } finally {
@@ -32,7 +38,9 @@ public class Runner {
         }
     }
 
-    public static void initGLFW() {
+
+
+    public static void initGLFW(World world) {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit())
@@ -51,7 +59,7 @@ public class Runner {
                 glfwSetWindowShouldClose(window, true);
             } else{
                 //pass key and action to barriers' movement method
-                World.world.handleInput(key, action);
+                world.handleInput(key, action);
             }
         });
 
@@ -76,26 +84,28 @@ public class Runner {
         glDisable(GL_DEPTH_TEST);
     }
 
-    private static void loop() {
+    public static void loop(World world, List<DoIf> doifs, EndIf endCondition) {
         GL.createCapabilities();
         glClearColor(.2f,.8f,0f, 0f);
         int frames = 0;
         long lastFrameRateDisplay = System.currentTimeMillis();
         long swapTimer = 0;
         long swapStart;
-        while (!glfwWindowShouldClose(window)) {
+        while (!glfwWindowShouldClose(window) && !endCondition.test()) {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            World.world.update();
+            world.update();
+
+            doifs.forEach(doIf -> doIf.attempt());
 
             glfwPollEvents();
 
-            while(World.world.paused) {
+            while(world.paused) {
                 glfwPollEvents();
             }
 
-            World.world.render();
+            world.render();
 
             swapStart = System.currentTimeMillis();
             glfwSwapBuffers(window); // swap the color buffers
@@ -114,7 +124,30 @@ public class Runner {
         }
     }
 
-    public interface Loop {
-        void loop();
+    public static class RunEveryNth implements DoIf {
+        private int n;
+        private int i;
+        private Runnable action;
+
+        public RunEveryNth(int n, Runnable action) {
+            this.n = n;
+            this.action = action;
+            i=1;
+        }
+
+        public void attempt() {
+            if(i%n == 0) {
+                action.run();
+            }
+            i++;
+        }
+    }
+
+    public interface DoIf {
+        void attempt();
+    }
+
+    public interface EndIf {
+        boolean test();
     }
 }
