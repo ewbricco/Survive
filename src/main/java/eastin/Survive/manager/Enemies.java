@@ -3,6 +3,7 @@ package eastin.Survive.manager;
 import eastin.Survive.GameState;
 import eastin.Survive.World;
 import eastin.Survive.objects.Enemy;
+import eastin.Survive.objects.Line;
 import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.utils.*;
 
@@ -43,13 +44,18 @@ public class Enemies implements Manager, Serializable {
     }
 
     public void render(){
-        objects.stream().forEach(object -> {
-            object.checkPositionAndRender();
-        });
-
         if(World.world.renderNav && nav != null) {
             nav.render();
         }
+
+        objects.stream().forEach(object -> {
+            if(World.world.renderNav && nav != null) {
+                for (int i=0; i<object.path.size()-1; i++) {
+                    (new Line(object.path.get(i), object.path.get(i+1))).render();
+                }
+            }
+            object.checkPositionAndRender();
+        });
     }
 
     //seeks target
