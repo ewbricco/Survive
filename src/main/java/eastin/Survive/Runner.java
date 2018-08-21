@@ -10,28 +10,29 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 
 public class Runner {
-    public long window;
-    public static Runner runner;
+    public static long window;
 
     public static void main(String[] args) {
 
-        runner = new Runner();
-
         World.createWorld();
 
+        run(() -> loop());
+    }
+
+    public static void run(Loop loop) {
         try {
-            runner.initGLFW();
-            runner.initGL();
-            runner.loop();
-            glfwFreeCallbacks(runner.window);
-            glfwDestroyWindow(runner.window);
+            initGLFW();
+            initGL();
+            loop.loop();
+            glfwFreeCallbacks(window);
+            glfwDestroyWindow(window);
         } finally {
             glfwTerminate();
             glfwSetErrorCallback(null).free();
         }
     }
 
-    private void initGLFW() {
+    public static void initGLFW() {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit())
@@ -66,7 +67,7 @@ public class Runner {
         glfwShowWindow(window);
     }
 
-    private void initGL(){
+    public static void initGL(){
         GL.createCapabilities();
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -75,8 +76,7 @@ public class Runner {
         glDisable(GL_DEPTH_TEST);
     }
 
-
-    private void loop() {
+    private static void loop() {
         GL.createCapabilities();
         glClearColor(.2f,.8f,0f, 0f);
         int frames = 0;
@@ -112,5 +112,9 @@ public class Runner {
                 swapTimer = 0;
             }
         }
+    }
+
+    public interface Loop {
+        void loop();
     }
 }
