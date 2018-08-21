@@ -69,6 +69,8 @@ public class World implements Serializable {
             saveToFile();
         } else if(key == GLFW_KEY_E && action == GLFW_PRESS) {
             spawningEnemies = !spawningEnemies;
+        } else if(key == GLFW_KEY_N && action == GLFW_RELEASE) {
+            renderNav = !renderNav;
         }
 
         else if(key == GLFW_KEY_1 && action == GLFW_PRESS) {
@@ -77,22 +79,12 @@ public class World implements Serializable {
                 e.path.forEach(c -> System.out.println(c));
                 System.out.println("*****");
             });
-        }
-
-        else if(key == GLFW_KEY_2 && action == GLFW_PRESS) {
+        } else if(key == GLFW_KEY_2 && action == GLFW_PRESS) {
             System.out.println("mc at: " + mc.toString());
-        }
-
-        else if(key == GLFW_KEY_3 && action == GLFW_PRESS) {
+        } else if(key == GLFW_KEY_3 && action == GLFW_PRESS) {
             System.out.println("closest barrier: " + barriers.getClosest(mc.getCenter()));
-        }
-
-        else if(key == GLFW_KEY_4 && action == GLFW_RELEASE) {
+        } else if(key == GLFW_KEY_4 && action == GLFW_RELEASE) {
             enemies.getObjects().forEach(e -> System.out.println("enemy: " + e.toString()));
-        }
-
-        else if(key == GLFW_KEY_N && action == GLFW_RELEASE) {
-            renderNav = !renderNav;
         }
 
         if(!paused) {

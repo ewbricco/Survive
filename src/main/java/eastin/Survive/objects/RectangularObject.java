@@ -293,4 +293,11 @@ public class RectangularObject extends Entity {
 
         return null;
     }
+
+    public void expandInAllDirections(int amount) {
+        expand(Direction.NORTH, amount);
+        expand(Direction.SOUTH, amount);
+        expand(Direction.WEST, amount);
+        expand(Direction.EAST, amount);
+    }
 }

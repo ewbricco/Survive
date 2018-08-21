@@ -25,7 +25,7 @@ public class Enemies implements Manager, Serializable {
     private final int TIMEBETWEENSPAWNS = 3000;
     public final int SIZE = 60;
     private final Color COLOR = new Color(1,0,0);
-    private final long TIMEBETWEENNAVREFRESH = 5000;
+    private final long TIMEBETWEENNAVREFRESH = 1000;
     private long lastNavRefresh;
     private long pausedAt;
 
@@ -47,7 +47,7 @@ public class Enemies implements Manager, Serializable {
             object.checkPositionAndRender();
         });
 
-        if(World.world.renderNav) {
+        if(World.world.renderNav && nav != null) {
             nav.render();
         }
     }
@@ -96,7 +96,10 @@ public class Enemies implements Manager, Serializable {
     public void update(){
 
         if(System.currentTimeMillis() - lastNavRefresh > TIMEBETWEENNAVREFRESH && objects.size() > 0) {
-            nav = new NavMesh(new RectangularObject(0, SIZE, SIZE, 0), World.world.barriers.getObjects());
+            int buffer = (int)TIMEBETWEENNAVREFRESH/1000 * MainCharacter.SPEED;
+            RectangularObject navArea = World.world.mc.getScreen();
+            navArea.expandInAllDirections(buffer);
+            nav = new NavMesh(new RectangularObject(0, SIZE, SIZE, 0), World.world.barriers.getBarriersInRect(navArea));
             lastNavRefresh = System.currentTimeMillis();
         }
 

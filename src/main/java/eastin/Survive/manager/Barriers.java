@@ -195,4 +195,18 @@ public class Barriers implements Manager, Serializable {
 
         return closestBarrier;
     }
+
+    public List<Barrier> getBarriersInRect(RectangularObject r) {
+        List<Barrier> barriers = new ArrayList<>();
+
+        objects.forEach(b -> {
+            if(b.overlapsWith(r)) {
+                barriers.add(b);
+            }
+        });
+
+        System.out.println(objects.size());
+        System.out.println(barriers.size());
+        return barriers;
+    }
 }
