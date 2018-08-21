@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL11.glLineWidth;
+
 /**
  * Created by ebricco on 12/2/16.
  */
@@ -49,9 +51,11 @@ public class Enemies implements Manager, Serializable {
         }
 
         objects.stream().forEach(object -> {
-            if(World.world.renderNav && nav != null) {
+            if(World.world.renderNav && nav != null && object.path != null) {
                 for (int i=0; i<object.path.size()-1; i++) {
-                    (new Line(object.path.get(i), object.path.get(i+1))).render();
+                    glLineWidth(3);
+                    (new Line(object.path.get(i), object.path.get(i+1))).render(new Color(1,0,1));
+                    glLineWidth(1);
                 }
             }
             object.checkPositionAndRender();

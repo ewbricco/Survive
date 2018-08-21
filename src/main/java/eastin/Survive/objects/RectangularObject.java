@@ -280,20 +280,6 @@ public class RectangularObject extends Entity {
         return closestCorner;
     }
 
-    public Coordinate getCorner(Corner c) {
-        if(c == Corner.BOTTOMLEFT) {
-            return getBottomLeft();
-        } else if(c == Corner.TOPLEFT) {
-            return getTopLeft();
-        } else if(c == Corner.TOPRIGHT) {
-            return getTopRight();
-        } else if(c == Corner.BOTTOMLEFT) {
-            return getBottomLeft();
-        }
-
-        return null;
-    }
-
     public void expandInAllDirections(int amount) {
         expand(Direction.NORTH, amount);
         expand(Direction.SOUTH, amount);

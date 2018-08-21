@@ -204,9 +204,6 @@ public class Barriers implements Manager, Serializable {
                 barriers.add(b);
             }
         });
-
-        System.out.println(objects.size());
-        System.out.println(barriers.size());
         return barriers;
     }
 }

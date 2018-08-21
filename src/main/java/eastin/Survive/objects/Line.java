@@ -143,9 +143,8 @@ public class Line extends Entity {
         return "line with " + s.toString() + " and " + t.toString();
     }
 
-    public void render() {
+    public void render(Color color) {
         Coordinate screenBottomLeft = World.world.mc.getScreen().getBottomLeft();
-        Color color = new Color(0,0,1);
         color.setColor();
         glBegin(GL_LINE_STRIP);
         {
@@ -153,5 +152,9 @@ public class Line extends Entity {
             glVertex2f(t.getX()-screenBottomLeft.getX(),t.getY()-screenBottomLeft.getY());
         }
         glEnd();
+    }
+
+    public void render() {
+        render(new Color(0,0,1));
     }
 }
