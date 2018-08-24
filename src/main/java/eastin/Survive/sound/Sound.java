@@ -96,6 +96,7 @@ public class Sound implements Runnable {
     public boolean checkIfDone() {
         if(System.currentTimeMillis() - playedAt > duration) {
             delete();
+            toRemove = true;
             return true;
         }
 
