@@ -29,6 +29,8 @@ public class Barriers implements Manager, Serializable {
 
     static int renderCount = 0;
 
+    public static Color baseColor = new Color(1f,1f,.5f);
+
     public Barriers() {
         objects = new ArrayList<>();
         Coordinate screenCenter = new Coordinate(MainCharacter.STARTPOINTX, MainCharacter.STARTPOINTY);
@@ -153,7 +155,7 @@ public class Barriers implements Manager, Serializable {
 
             Coordinate coord = new Coordinate(GameState.RAND.nextInt(area.getWidth()) + area.getLeftBound(), GameState.RAND.nextInt(area.getHeight()) + area.getLowerBound());
 
-            objects.add(new Barrier(coord, s, s, new Color()));
+            objects.add(new Barrier(coord, s, s, Color.getColorFixedRatioVariableBrightness(baseColor, .8f, .2f)));
         }
     }
 
@@ -205,5 +207,15 @@ public class Barriers implements Manager, Serializable {
             }
         });
         return barriers;
+    }
+
+    public boolean pointIsOnBarrier(Coordinate c) {
+        for(Barrier b:objects) {
+            if(b.overlapsWith(c)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

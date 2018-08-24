@@ -27,7 +27,7 @@ public class Enemies implements Manager, Serializable {
 
     private final int TIMEBETWEENSPAWNS = 3000;
     public final int SIZE = 60;
-    private final Color COLOR = new Color(1,0,0);
+    private final Color COLOR = new Color(.2f,1f,1f);
     private final long TIMEBETWEENNAVREFRESH = 1000;
     private long lastNavRefresh;
     private long pausedAt;
@@ -72,6 +72,7 @@ public class Enemies implements Manager, Serializable {
         List<RectangularObject> interactables = new ArrayList<>();
         interactables.addAll(objects);
         interactables.add(World.world.mc);
+        interactables.addAll(World.world.barriers.getObjects());
 
         objects.forEach(object -> {
             object.update(target, interactables, nav); //doesn't need to interact with barriers if routing is working correctly
@@ -81,6 +82,25 @@ public class Enemies implements Manager, Serializable {
     private void createNewEnemy() {
         //System.out.println("creating new Enemy");
 
+        Coordinate c = getCoordinateAroundMc();
+        int retryAttempts = 5;
+
+        if(World.world.barriers.pointIsOnBarrier(c)) {
+            if(retryAttempts > 0) {
+                c = getCoordinateAroundMc();
+                retryAttempts--;
+            } else {
+                System.out.println("couldn't place enemy");
+            }
+        }
+
+        //System.out.println("xDiff: "  + xDiff);
+        //System.out.println("yDiff: "  + yDiff);
+
+        addEnemy(c);
+    }
+
+    public Coordinate getCoordinateAroundMc() {
         Coordinate c = World.world.mc.getCenter();
 
         //System.out.println("mc center: " + Runner.mc.getCenter().toString());
@@ -97,10 +117,7 @@ public class Enemies implements Manager, Serializable {
         c.addX(xDiff);
         c.addY(yDiff);
 
-        //System.out.println("xDiff: "  + xDiff);
-        //System.out.println("yDiff: "  + yDiff);
-
-        addEnemy(c);
+        return c;
     }
 
     public void addEnemy(Coordinate c) {

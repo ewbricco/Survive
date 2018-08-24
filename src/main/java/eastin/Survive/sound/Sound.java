@@ -1,4 +1,4 @@
-package test;
+package eastin.Survive.sound;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
@@ -7,11 +7,10 @@ import org.lwjgl.openal.ALCapabilities;
 
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
+import static org.lwjgl.openal.ALC10.alcMakeContextCurrent;
 import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
 import static org.lwjgl.system.MemoryStack.stackMallocInt;
 import static org.lwjgl.system.MemoryStack.stackPop;
@@ -19,11 +18,24 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.libc.Stdlib.free;
 
 /**
- * Created by ebricco on 9/30/17.
+ * Created by ebricco on 8/23/18.
  */
-public class Sound {
+public class Sound implements Runnable {
 
-    public static void main(String[] args) {
+    String fileName;
+    int sourcePointer;
+    int bufferPointer;
+    long playedAt;
+    int duration; //duration of sound in ms
+    boolean toRemove;
+
+    public Sound(String fileName) {
+        this.fileName = fileName;
+        toRemove = false;
+        duration = 5000;
+    }
+
+    public static void initializeAbilityToPlaySound() {
         //Initialization
         String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
         long device = alcOpenDevice(defaultDeviceName);
@@ -34,37 +46,9 @@ public class Sound {
 
         ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
         ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
-
-
-        String fileName = "reload.ogg";
-
-        List<Pointers> pointers = new ArrayList<>();
-
-        /*long start = System.currentTimeMillis();
-        for(int i=0; i<100; i++) {
-            playSound(fileName);
-
-            try {
-                //Wait for a second
-                Thread.sleep(40);
-            } catch(InterruptedException ex) {}
-        }
-        System.out.println(System.currentTimeMillis() - start);*/
-
-        playSound(fileName);
-
-        try {
-            //Wait for a second
-            Thread.sleep(3000);
-        } catch(InterruptedException ex) {}
-
-        pointers.forEach(p -> p.delete());
-
-        alcDestroyContext(context);
-        alcCloseDevice(device);
     }
 
-    public static void playSound(String fileName) {
+    public void run() {
         //Allocate space to store return information from the function
         stackPush();
         IntBuffer channelsBuffer = stackMallocInt(1);
@@ -89,7 +73,7 @@ public class Sound {
         }
 
         //Request space for the buffer
-        int bufferPointer = alGenBuffers();
+        bufferPointer = alGenBuffers();
 
         //Send the data to OpenAL
         alBufferData(bufferPointer, format, rawAudioBuffer, sampleRate);
@@ -99,31 +83,27 @@ public class Sound {
 
 
         //Request a source
-        int sourcePointer = alGenSources();
+        sourcePointer = alGenSources();
 
         //Assign the sound we just loaded to the source
         alSourcei(sourcePointer, AL_BUFFER, bufferPointer);
 
         //Play the sound
         alSourcePlay(sourcePointer);
+        playedAt = System.currentTimeMillis();
     }
 
-    public static class Pointers {
-        int sourcePointer;
-        int bufferPointer;
-        long createdAt;
-        boolean toRemove;
-
-        public Pointers(int source, int buffer) {
-            sourcePointer = source;
-            bufferPointer = buffer;
-            createdAt = System.currentTimeMillis();
+    public boolean checkIfDone() {
+        if(System.currentTimeMillis() - playedAt > duration) {
+            delete();
+            return true;
         }
 
-        public void delete() {
-            alDeleteSources(sourcePointer);
-            alDeleteBuffers(bufferPointer);
-            toRemove = true;
-        }
+        return false;
+    }
+
+    public void delete() {
+        alDeleteSources(sourcePointer);
+        alDeleteBuffers(bufferPointer);
     }
 }

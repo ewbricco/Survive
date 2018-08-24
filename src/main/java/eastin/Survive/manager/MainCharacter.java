@@ -22,6 +22,8 @@ public class MainCharacter extends MovingRectangle implements Manager {
     public final static int STARTPOINTX = GameState.WIDTH/2;
     public final static int STARTPOINTY = GameState.HEIGHT/2;
     private final static Color defaultColor = new Color(0,0,0);
+    private final static String GUNSHOT = "gunshot.ogg";
+    private final static String RELOAD = "reload.ogg";
 
     static final int SPEED = 600; //px/s
     private long lastMovement;
@@ -30,15 +32,21 @@ public class MainCharacter extends MovingRectangle implements Manager {
     private int health;
     private boolean firing;
     private long lastFire;
+    private long lastReload;
     private long pausedAt;
+    private boolean loaded;
 
     private final static long TIMEBETWEENFIRING = 1000;
+    private final static long RELOADOFFSET = TIMEBETWEENFIRING/2;
 
     public MainCharacter(){
         super(STARTPOINTX, STARTPOINTX + WIDTH, STARTPOINTY + HEIGHT, STARTPOINTY, defaultColor);
         health = 5;
         firing = false;
         lastFire = 0;
+        facing = Direction.NORTH;
+        lastReload = 0;
+        loaded = true;
     }
 
     public void pause(long time) {
@@ -100,6 +108,13 @@ public class MainCharacter extends MovingRectangle implements Manager {
 
     private void fireProjectile() {
         World.world.projectiles.addNewProjectile(facing, getMiddleOfFace(facing));
+        World.world.sounds.playSound(GUNSHOT);
+        loaded = false;
+    }
+
+    private void reload() {
+        World.world.sounds.playSound(RELOAD);
+        loaded = true;
     }
 
     public void update(){
@@ -121,12 +136,22 @@ public class MainCharacter extends MovingRectangle implements Manager {
                 lastFire = System.currentTimeMillis();
             }
         }
+
+        if(!loaded && System.currentTimeMillis() - lastFire > RELOADOFFSET) {
+            reload();
+            lastReload = System.currentTimeMillis();
+        }
     }
+
+
 
     private void handleCollision(RectangularObject object) {
         if(object instanceof Enemy) {
-            ((Enemy)object).takeDamage(1);
-            takeDamage(1);
+            Enemy enemy = ((Enemy)object);
+            if(!enemy.dead) {
+                enemy.takeDamage(1);
+                takeDamage(1);
+            }
         }
     }
 

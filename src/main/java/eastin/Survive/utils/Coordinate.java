@@ -69,12 +69,14 @@ public class Coordinate extends Entity implements Serializable {
         this.y = y;
     }
 
-    public void addX(int inc) {
+    public Coordinate addX(int inc) {
         x += inc;
+        return this;
     }
 
-    public void addY(int inc) {
+    public Coordinate addY(int inc) {
         y += inc;
+        return this;
     }
 
     public void print() {
@@ -90,7 +92,7 @@ public class Coordinate extends Entity implements Serializable {
     }
 
     //maintains x:y ratio, but scales so hypotenuse is equal given value
-    public void pythagoreanScale(int hypo) {
+    public void pythagoreanScale(double hypo) {
 
         double scaler = Math.pow(Math.pow(hypo, 2) / (Math.pow(x, 2) + Math.pow(y, 2)), .5d);
 

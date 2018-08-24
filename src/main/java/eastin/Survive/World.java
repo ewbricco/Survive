@@ -2,6 +2,7 @@ package eastin.Survive;
 
 import eastin.Survive.manager.*;
 import eastin.Survive.manager.MainCharacter;
+import eastin.Survive.sound.SoundManager;
 
 import java.io.*;
 import java.util.*;
@@ -25,13 +26,16 @@ public class World implements Serializable {
     public Barriers barriers;
     public Enemies enemies;
     public Projectiles projectiles;
+    public SoundManager sounds;
 
     private List<Manager> managers;
 
     public boolean paused = false;
+    public final boolean sound = true;
     public static boolean spawningEnemies = false;
     public static boolean spawningBarriers = true;
     public static boolean renderNav = false;
+    public static boolean printFloat = false;
 
     private static String fileName = null;
 
@@ -43,7 +47,9 @@ public class World implements Serializable {
         enemies = new Enemies();
         projectiles = new Projectiles();
 
-        managers = Arrays.asList(barriers, enemies, mc, projectiles);
+        managers = Arrays.asList(mc, barriers, enemies, projectiles);
+
+        sounds = new SoundManager();
     }
 
     public static World createWorld() {
@@ -85,6 +91,8 @@ public class World implements Serializable {
             System.out.println("closest barrier: " + barriers.getClosest(mc.getCenter()));
         } else if(key == GLFW_KEY_4 && action == GLFW_RELEASE) {
             enemies.getObjects().forEach(e -> System.out.println("enemy: " + e.toString()));
+        } else if(key == GLFW_KEY_Z && action == GLFW_RELEASE) {
+            printFloat = !printFloat;
         }
 
         if(!paused) {
@@ -95,6 +103,7 @@ public class World implements Serializable {
 
     public void update() {
         managers.forEach(m -> m.update());
+        sounds.update();
     }
 
     public void render() {
@@ -193,6 +202,10 @@ public class World implements Serializable {
                 System.out.println(e.toString());
             }
         }
+    }
+
+    public void destroy() {
+        sounds.destroy();
     }
 
     public void simulateGameLoop() {

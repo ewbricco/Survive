@@ -48,7 +48,6 @@ public class Line extends Entity {
     }
 
 
-    //TODO account for infinite slope
     public boolean overlapsWith(RectangularObject r) {
 
         if(!r.overlapsWith(getEnclosingRect())) {

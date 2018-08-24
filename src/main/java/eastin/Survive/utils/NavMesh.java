@@ -1,11 +1,14 @@
 package eastin.Survive.utils;
 
+import eastin.Survive.World;
 import eastin.Survive.objects.Edge;
 import eastin.Survive.objects.Line;
 import eastin.Survive.objects.RectangularObject;
 
 import java.io.Serializable;
 import java.util.*;
+
+import static org.lwjgl.opengl.GL11.glLineWidth;
 
 /**
  * Created by ebricco on 8/7/18.
@@ -29,23 +32,24 @@ public class NavMesh implements Serializable {
         constraints = new ArrayList<>();
         nodes = new ArrayList<>();
 
-        int temp = 0;
-
         for(RectangularObject r:obstacles) {
 
-            constraints.add(new RectangularObject(r.getLeftBound() - mover.getWidth() + 1, r.getRightBound(), r.getUpperBound(), r.getLowerBound() - mover.getHeight() + 1));
+            RectangularObject constraint = new RectangularObject(r.getLeftBound() - mover.getWidth() + 1, r.getRightBound(), r.getUpperBound(), r.getLowerBound() - mover.getHeight() + 1);
+            constraints.add(constraint);
+
+            int temp = 0;
 
             //bottom left
-            nodes.add(new Node(r.getLeftBound() - mover.getWidth() - temp, r.getLowerBound() - mover.getHeight() - temp));
+            nodes.add(new Node(constraint.getBottomLeft().addX(-1-temp).addY(-1-temp)));
 
             //top left
-            nodes.add(new Node(r.getLeftBound() - mover.getWidth() - temp, r.getUpperBound() + 1 + temp));
+            nodes.add(new Node(constraint.getTopLeft().addX(-1-temp).addY(1+temp)));
 
             //bottom right
-            nodes.add(new Node(r.getRightBound() + 1 + temp, r.getLowerBound() - mover.getHeight() - temp));
+            nodes.add(new Node(constraint.getBottomRight().addX(1+temp).addY(-1-temp)));
 
             //top right
-            nodes.add(new Node(r.getRightBound() + 1 + temp, r.getUpperBound() + 1 + temp));
+            nodes.add(new Node(constraint.getTopRight().addX(1+temp).addY(1+temp)));
         }
 
         //int count = 0;
@@ -98,6 +102,11 @@ public class NavMesh implements Serializable {
         }
 
         if(!overlaps) {
+            if(temporary && World.world.renderNav) {
+                glLineWidth(1);
+                edge.render(new Color(1,1,1));
+                glLineWidth(1);
+            }
             u.addEdges(Arrays.asList(edge));
 
             //add other direction for consistency, eventually remove

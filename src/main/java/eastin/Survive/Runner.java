@@ -1,5 +1,6 @@
 package eastin.Survive;
 
+import eastin.Survive.sound.Sound;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
@@ -27,6 +28,7 @@ public class Runner {
 
     public static void run(World world, List<DoIf> doifs, EndIf endCondition) {
         try {
+            Sound.initializeAbilityToPlaySound();
             initGLFW(world);
             initGL();
             loop(world, doifs, endCondition);
@@ -35,6 +37,7 @@ public class Runner {
         } finally {
             glfwTerminate();
             glfwSetErrorCallback(null).free();
+            world.destroy();
         }
     }
 

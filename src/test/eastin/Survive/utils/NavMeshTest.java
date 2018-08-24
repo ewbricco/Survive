@@ -144,6 +144,69 @@ public class NavMeshTest {
         assert(world.enemies.getObjects().size() == 0);
     }
 
+    @Test
+    public void testPathBasic4() {
+
+        World world = new World();
+        World.spawningBarriers = false;
+        World.spawningEnemies = false;
+        Enemy.TIMEBETWEENPATHUPDATE = 10;
+
+        world.barriers.getObjects().add(new Barrier(1055, 1151, 326, 230, new Color(0,0,1)));
+        world.barriers.getObjects().add(new Barrier(200, 275, 1000, 925, new Color(0,0,1)));
+        world.barriers.getObjects().add(new Barrier(2000, 2100, 1000, 900, new Color(0,0,1)));
+        world.barriers.getObjects().add(new Barrier(1500, 1600, 1100, 1000, new Color(0,0,1)));
+
+        world.enemies.addEnemy(new Coordinate(2100, 839));
+
+        world.mc.setBounds(new RectangularObject(1601, 1642, 1544, 1503));
+
+        Runner.DoIf doif = new Runner.RunEveryNth(30, () -> {
+            /*if(world.enemies.getObjects().size() > 0) {
+                System.out.println(world.enemies.getObjects().get(0).toString());
+                c
+                System.out.println(world.enemies.getObjects().get(0).positionInPath);
+            }*/
+        });
+
+        //middle steps should include bottom left of barrier (1055, 230) - enemy size 60 -1 (994, 169)
+
+        Runner.run(world, Arrays.asList(doif), () -> world.enemies.getObjects().size() == 0);
+
+        assert(world.barriers.getObjects().size() == 1);
+        assert(world.enemies.getObjects().size() == 0);
+    }
+
+    @Test
+    public void testStraightLine() {
+
+        World world = new World();
+        World.spawningBarriers = false;
+        World.spawningEnemies = false;
+        Enemy.TIMEBETWEENPATHUPDATE = 10;
+
+        world.barriers.getObjects().add(new Barrier(100, 200, 200, 100, new Color(0,0,1)));
+
+        world.enemies.addEnemy(new Coordinate(40, 700));
+
+        world.mc.setBounds(new RectangularObject(40, 81, -100, -141));
+
+        Runner.DoIf doif = new Runner.RunEveryNth(30, () -> {
+            /*if(world.enemies.getObjects().size() > 0) {
+                System.out.println(world.enemies.getObjects().get(0).toString());
+                c
+                System.out.println(world.enemies.getObjects().get(0).positionInPath);
+            }*/
+        });
+
+        //middle steps should include bottom left of barrier (1055, 230) - enemy size 60 -1 (994, 169)
+
+        Runner.run(world, Arrays.asList(doif), () -> world.enemies.getObjects().size() == 0);
+
+        assert(world.barriers.getObjects().size() == 1);
+        assert(world.enemies.getObjects().size() == 0);
+    }
+
 
     @Test
     public void testPathForUnnecessaryClingingToBarriers() {

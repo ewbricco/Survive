@@ -21,6 +21,10 @@ public class RectangularObject extends Entity {
     protected int width;
     protected int height;
 
+    public RectangularObject(RectangularObject r) {
+        this(r.getLeftBound(), r.getRightBound(), r.getUpperBound(), r.getLowerBound());
+    }
+
     public RectangularObject(int leftBound, int rightBound, int upperBound, int lowerBound) {
         if(rightBound < leftBound || upperBound < lowerBound) {
             throw new IllegalArgumentException("nonsense bounds");
@@ -104,7 +108,7 @@ public class RectangularObject extends Entity {
         } else if(e instanceof Line) {
             return ((Line)e).overlapsWith(this);
         } else if(e instanceof Coordinate) {
-
+            return ((Coordinate)e).overlapsWith(this);
         }
 
         return false;

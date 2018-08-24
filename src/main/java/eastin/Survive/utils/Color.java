@@ -106,6 +106,25 @@ public class Color implements Serializable {
         return color;
     }
 
+    //keeps r g b ratios constant, but varies brightness from white to black
+    public static Color getColorFixedRatioVariableBrightness(Color c, float maxBrightness, float minBrightness) {
+        verifyPercent(maxBrightness, minBrightness);
+
+        float maxComponent = Math.max(Math.max(c.red,c.green), c.blue);
+
+        float scaler = Math.max(minBrightness, GameState.RAND.nextFloat()*maxBrightness);
+
+        return new Color(c.red*scaler/maxComponent, c.green*scaler/maxComponent, c.blue*scaler/maxComponent);
+    }
+
+    public static void verifyPercent(float... inputs) {
+        for(float f:inputs) {
+            if(f < 0 || f > 1) {
+                throw new IllegalArgumentException("percent must be between 0 and 1");
+            }
+        }
+    }
+
     public void setColor() {
         glColor3f(red, green, blue);
     }

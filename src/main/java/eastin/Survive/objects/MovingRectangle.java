@@ -1,5 +1,6 @@
 package eastin.Survive.objects;
 
+import eastin.Survive.World;
 import eastin.Survive.utils.Color;
 import eastin.Survive.utils.Coordinate;
 import eastin.Survive.utils.Direction;
@@ -10,6 +11,10 @@ import java.util.List;
  * Created by ebricco on 7/25/18.
  */
 public class MovingRectangle extends RenderableRectangle {
+
+    public MovingRectangle(MovingRectangle m) {
+        super(m.getLeftBound(), m.getRightBound(), m.getUpperBound(), m.getLowerBound(), m.color);
+    }
 
     public MovingRectangle(int leftBound, int rightBound, int upperBound, int lowerBound, Color color) {
         super(leftBound, rightBound, upperBound, lowerBound, color);
@@ -64,34 +69,86 @@ public class MovingRectangle extends RenderableRectangle {
 
     public RectangularObject move(Coordinate diff, List<? extends RectangularObject> interactables) {
 
+        if(World.world.printFloat) {
+            System.out.println("movement vector " + diff.toString());
+        }
+
         RectangularObject collisionObject = null;
         RectangularObject next;
 
-        if(diff.getY() > 0) {
-            next = move(Direction.NORTH, diff.getY(), interactables);
+        if(yMovementCollides(diff, interactables)) {
+            if(World.world.printFloat) {
+                System.out.println("y collides");
+            }
+            next = moveX(diff, interactables);
             if(next != null) {
                 collisionObject = next;
             }
-        } else if(diff.getY() < 0) {
-            next = move(Direction.SOUTH, -diff.getY(), interactables);
+            next = moveY(diff, interactables);
+            if(collisionObject == null && next != null) {
+                collisionObject = next;
+            }
+        } else {
+            if(World.world.printFloat) {
+                System.out.println("y first");
+                World.world.printFloat = false;
+            }
+            next = moveY(diff, interactables);
             if(next != null) {
                 collisionObject = next;
             }
-        }
-
-        if(diff.getX() > 0) {
-            next = move(Direction.EAST, diff.getX(), interactables);
-            if(next != null) {
-                collisionObject = next;
-            }
-        } else if(diff.getX() < 0) {
-            next = move(Direction.WEST, -diff.getX(), interactables);
-            if(next != null) {
+            next = moveX(diff, interactables);
+            if(collisionObject == null && next != null) {
                 collisionObject = next;
             }
         }
 
         return collisionObject;
+    }
+
+    protected RectangularObject moveY(Coordinate diff, List<? extends RectangularObject> interactables) {
+
+        RectangularObject collisionObject = null;
+
+        if(diff.getY() > 0) {
+            collisionObject = move(Direction.NORTH, diff.getY(), interactables);
+        } else if(diff.getY() < 0) {
+            collisionObject = move(Direction.SOUTH, -diff.getY(), interactables);
+        }
+
+        return collisionObject;
+    }
+
+    protected RectangularObject moveX(Coordinate diff, List<? extends RectangularObject> interactables) {
+
+        RectangularObject collisionObject = null;
+
+        if(diff.getX() > 0) {
+            collisionObject = move(Direction.EAST, diff.getX(), interactables);
+        } else if(diff.getX() < 0) {
+            collisionObject = move(Direction.WEST, -diff.getX(), interactables);
+        }
+
+        return collisionObject;
+    }
+
+    protected boolean yMovementCollides(Coordinate diff, List<? extends RectangularObject> interactables) {
+        RectangularObject next = null;
+        MovingRectangle simulation = new MovingRectangle(this);
+
+        if(diff.getY() > 0) {
+            next = simulation.move(Direction.NORTH, diff.getY(), interactables);
+            if(next != null) {
+                return true;
+            }
+        } else if(diff.getY() < 0) {
+            next = simulation.move(Direction.SOUTH, -diff.getY(), interactables);
+            if(next != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public RectangularObject simulateUnhinderedMovement(Direction direction, int distance) {
@@ -112,7 +169,7 @@ public class MovingRectangle extends RenderableRectangle {
         return null;
     }
 
-    public RectangularObject seek(Coordinate target, int distance, List<? extends RectangularObject> interactables) {
+    public RectangularObject seek(Coordinate target, double distance, List<? extends RectangularObject> interactables) {
         //System.out.println("target: " + target.toString());
         //System.out.println("center: " + getCenter());
         Coordinate diff = Coordinate.difference(target, getBottomLeft());
