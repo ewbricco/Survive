@@ -16,7 +16,7 @@ public class Projectile extends MovingRectangle {
     private final static int LENGTH = 15;
     private final static int WIDTH = 5;
     private final static Color COLOR = new Color(0,0,1);
-    private final static int SPEED = 2000;
+    private final static int SPEED = 7000;
 
     private Direction direction;
     private long lastMovement;
@@ -43,6 +43,7 @@ public class Projectile extends MovingRectangle {
 
         World.world.barriers.getObjects().forEach(b -> interactables.add(b));
         World.world.enemies.getObjects().forEach(e -> interactables.add(e));
+        World.world.items.getObjects().forEach(i -> interactables.add(i));
 
 
         handleCollision(move(direction, movementDistance, interactables));

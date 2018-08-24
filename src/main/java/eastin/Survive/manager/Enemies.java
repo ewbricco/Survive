@@ -6,6 +6,7 @@ import eastin.Survive.objects.Enemy;
 import eastin.Survive.objects.Line;
 import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.utils.*;
+import org.w3c.dom.css.Rect;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ public class Enemies implements Manager, Serializable {
 
     private long lastSpawn;
 
-    private final int TIMEBETWEENSPAWNS = 3000;
+    private final int TIMEBETWEENSPAWNS = 1500;
     public final int SIZE = 60;
-    private final Color COLOR = new Color(.2f,1f,1f);
+    private final Color COLOR = new Color(.88f, .1f,.88f);
     private final long TIMEBETWEENNAVREFRESH = 1000;
     private long lastNavRefresh;
     private long pausedAt;
@@ -65,9 +66,6 @@ public class Enemies implements Manager, Serializable {
     //seeks target
     public void move(RectangularObject target) {
         objects.removeIf(enemy -> enemy.toDespawn);
-        /*List<RectangularObject> interactables = new ArrayList<RectangularObject>();
-        interactables.addAll(World.world.getWorld().barriers.getObjects());
-        interactables.add(World.world.mc);*/
 
         List<RectangularObject> interactables = new ArrayList<>();
         interactables.addAll(objects);
@@ -80,24 +78,24 @@ public class Enemies implements Manager, Serializable {
     }
 
     private void createNewEnemy() {
-        //System.out.println("creating new Enemy");
 
-        Coordinate c = getCoordinateAroundMc();
         int retryAttempts = 5;
+        Enemy e;
 
-        if(World.world.barriers.pointIsOnBarrier(c)) {
-            if(retryAttempts > 0) {
-                c = getCoordinateAroundMc();
-                retryAttempts--;
+        while(retryAttempts > 0) {
+            e = getEnemy(getCoordinateAroundMc());
+
+            if(World.world.barriers.getBarriersInRect(e).size() > 0) {
+                    retryAttempts--;
             } else {
+                objects.add(e);
+                break;
+            }
+
+            if(retryAttempts == 0) {
                 System.out.println("couldn't place enemy");
             }
         }
-
-        //System.out.println("xDiff: "  + xDiff);
-        //System.out.println("yDiff: "  + yDiff);
-
-        addEnemy(c);
     }
 
     public Coordinate getCoordinateAroundMc() {
@@ -120,8 +118,8 @@ public class Enemies implements Manager, Serializable {
         return c;
     }
 
-    public void addEnemy(Coordinate c) {
-        objects.add(new Enemy(c.getX(), c.getX() + SIZE, c.getY() + SIZE, c.getY(), COLOR));
+    public Enemy getEnemy(Coordinate c) {
+        return new Enemy(c.getX(), c.getX() + SIZE, c.getY() + SIZE, c.getY(), COLOR);
     }
 
     //attempts to reach target
@@ -131,7 +129,11 @@ public class Enemies implements Manager, Serializable {
             int buffer = (int)TIMEBETWEENNAVREFRESH/1000 * MainCharacter.SPEED;
             RectangularObject navArea = World.world.mc.getScreen();
             navArea.expandInAllDirections(buffer);
-            nav = new NavMesh(new RectangularObject(0, SIZE, SIZE, 0), World.world.barriers.getBarriersInRect(navArea));
+
+            List<RectangularObject> interactables = new ArrayList<>();
+            interactables.addAll(World.world.barriers.getBarriersInRect(navArea));
+            interactables.addAll(World.world.items.getItemsInRect(navArea));
+            nav = new NavMesh(new RectangularObject(0, SIZE, SIZE, 0), interactables);
             lastNavRefresh = System.currentTimeMillis();
         }
 

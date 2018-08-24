@@ -18,7 +18,7 @@ public class Enemy extends MovingRectangle {
 
     public static final Color DEADCOLOR = new Color(1,0,0);
 
-    private final int SPEED = 300;
+    private final int SPEED = 350;
     private final int INITIALHEALTH = 1;
 
     private long lastMovement;
@@ -28,7 +28,7 @@ public class Enemy extends MovingRectangle {
     public static long TIMEBETWEENPATHUPDATE = 10;
     private int health;
     private long diedAt;
-    public static long DEADTIME = 175;
+    public static long DEADTIME = 75;
 
     public boolean toDespawn; //if enemy should be removed from map
     public boolean dead; //if dead, but not necessarily ready to be removed

@@ -27,6 +27,7 @@ public class World implements Serializable {
     public Enemies enemies;
     public Projectiles projectiles;
     public SoundManager sounds;
+    public Items items;
 
     private List<Manager> managers;
 
@@ -46,8 +47,9 @@ public class World implements Serializable {
         barriers = new Barriers();
         enemies = new Enemies();
         projectiles = new Projectiles();
+        items = new Items();
 
-        managers = Arrays.asList(mc, barriers, enemies, projectiles);
+        managers = Arrays.asList(mc, barriers, enemies, projectiles, items);
 
         sounds = new SoundManager();
     }

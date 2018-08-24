@@ -97,7 +97,7 @@ public class NavMeshTest {
         World world = new World();
         world.barriers.getObjects().add(new Barrier(6314, 6494, 575, 534, new Color()));
 
-        world.enemies.addEnemy(new Coordinate(5430, 688));
+        world.enemies.getObjects().add(world.enemies.getEnemy(new Coordinate(5430, 688)));
 
         world.mc.setBounds(new RectangularObject(6272, 6313, 575, 534));
 
@@ -122,7 +122,7 @@ public class NavMeshTest {
 
         world.barriers.getObjects().add(new Barrier(1055, 1151, 326, 230, new Color(0,0,1)));
 
-        world.enemies.addEnemy(new Coordinate(2000, 160));
+        world.enemies.objects.add(world.enemies.getEnemy(new Coordinate(2000, 160)));
 
         world.mc.setBounds(new RectangularObject(1013, 1054, 309, 268));
 
@@ -157,7 +157,7 @@ public class NavMeshTest {
         world.barriers.getObjects().add(new Barrier(2000, 2100, 1000, 900, new Color(0,0,1)));
         world.barriers.getObjects().add(new Barrier(1500, 1600, 1100, 1000, new Color(0,0,1)));
 
-        world.enemies.addEnemy(new Coordinate(2100, 839));
+        world.enemies.objects.add(world.enemies.getEnemy(new Coordinate(2100, 839)));
 
         world.mc.setBounds(new RectangularObject(1601, 1642, 1544, 1503));
 
@@ -187,7 +187,7 @@ public class NavMeshTest {
 
         world.barriers.getObjects().add(new Barrier(100, 200, 200, 100, new Color(0,0,1)));
 
-        world.enemies.addEnemy(new Coordinate(40, 700));
+        world.enemies.objects.add(world.enemies.getEnemy(new Coordinate(40, 700)));
 
         world.mc.setBounds(new RectangularObject(40, 81, -100, -141));
 

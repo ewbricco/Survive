@@ -3,6 +3,7 @@ package eastin.Survive.manager;
 import eastin.Survive.GameState;
 import eastin.Survive.World;
 import eastin.Survive.objects.Enemy;
+import eastin.Survive.objects.Item;
 import eastin.Survive.objects.MovingRectangle;
 import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.utils.*;
@@ -24,6 +25,7 @@ public class MainCharacter extends MovingRectangle implements Manager {
     private final static Color defaultColor = new Color(0,0,0);
     private final static String GUNSHOT = "gunshot.ogg";
     private final static String RELOAD = "reload.ogg";
+    private final static String POWERUP = "powerup.ogg";
 
     static final int SPEED = 600; //px/s
     private long lastMovement;
@@ -36,7 +38,7 @@ public class MainCharacter extends MovingRectangle implements Manager {
     private long pausedAt;
     private boolean loaded;
 
-    private final static long TIMEBETWEENFIRING = 1000;
+    private static long TIMEBETWEENFIRING = 1000;
     private final static long RELOADOFFSET = TIMEBETWEENFIRING/2;
 
     public MainCharacter(){
@@ -126,6 +128,7 @@ public class MainCharacter extends MovingRectangle implements Manager {
             List<RectangularObject> interactables = new ArrayList<>();
             interactables.addAll(World.world.barriers.getObjects());
             interactables.addAll(World.world.enemies.getObjects());
+            interactables.addAll(World.world.items.getObjects());
 
             handleCollision(move(direction, movementDistance, interactables));
         }
@@ -152,6 +155,10 @@ public class MainCharacter extends MovingRectangle implements Manager {
                 enemy.takeDamage(1);
                 takeDamage(1);
             }
+        } else if(object instanceof Item) {
+            ((Item)object).toDespawn = true;
+            TIMEBETWEENFIRING /= 2;
+            World.world.sounds.playSound(POWERUP);
         }
     }
 
