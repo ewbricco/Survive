@@ -1,5 +1,6 @@
 package eastin.Survive.sound;
 
+import eastin.Survive.World;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
@@ -23,32 +24,27 @@ import static org.lwjgl.system.libc.Stdlib.free;
 public class Sound implements Runnable {
 
     String fileName;
-    int sourcePointer;
+    //int sourcePointer;
     int bufferPointer;
     long playedAt;
     int duration; //duration of sound in ms
     boolean toRemove;
 
+    static long device;
+    static long context;
+
+    int sourcePointer;
+
     public Sound(String fileName) {
         this.fileName = fileName;
         toRemove = false;
         duration = 5000;
-    }
 
-    public static void initializeAbilityToPlaySound() {
-        //Initialization
-        String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
-        long device = alcOpenDevice(defaultDeviceName);
+        if(!fileName.equals("gunshot.ogg")) {
+            //Request a source
+            sourcePointer = alGenSources();
+        }
 
-        int[] attributes = {0};
-        long context = alcCreateContext(device, attributes);
-        alcMakeContextCurrent(context);
-
-        ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
-        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
-    }
-
-    public void run() {
         //Allocate space to store return information from the function
         stackPush();
         IntBuffer channelsBuffer = stackMallocInt(1);
@@ -81,12 +77,38 @@ public class Sound implements Runnable {
         //Free the memory allocated by STB
         free(rawAudioBuffer);
 
+        if(fileName.equals("gunshot.ogg")) {
+            for(int i=0; i<World.sounds.NUMBERFIRESOURCES; i++) {
+                //Assign the sound we just loaded to the source
+                alSourcei(World.sounds.getNextFireSource(), AL_BUFFER, bufferPointer);
+            }
+        } else {
+            alSourcei(sourcePointer, AL_BUFFER, bufferPointer);
+        }
+    }
 
-        //Request a source
-        sourcePointer = alGenSources();
+    public static void initializeAbilityToPlaySound() {
+        //Initialization
+        String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+        device = alcOpenDevice(defaultDeviceName);
 
-        //Assign the sound we just loaded to the source
-        alSourcei(sourcePointer, AL_BUFFER, bufferPointer);
+        int[] attributes = {0};
+        context = alcCreateContext(device, attributes);
+        alcMakeContextCurrent(context);
+
+        ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
+        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+    }
+
+    public static void shutdown() {
+        alcDestroyContext(context);
+        alcCloseDevice(device);
+    }
+
+    public void run() {
+        if(fileName.equals("gunshot.ogg")) {
+            sourcePointer = World.sounds.getNextFireSource();
+        }
 
         //Play the sound
         alSourcePlay(sourcePointer);

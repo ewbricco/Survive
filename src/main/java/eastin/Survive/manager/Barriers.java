@@ -3,7 +3,7 @@ package eastin.Survive.manager;
 import eastin.Survive.GameState;
 import eastin.Survive.World;
 import eastin.Survive.objects.Barrier;
-import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.objects.Rectangle;
 import eastin.Survive.objects.RenderableRectangle;
 import eastin.Survive.utils.*;
 
@@ -23,9 +23,9 @@ public class Barriers implements Manager, Serializable {
 
     public List<Barrier> objects;
 
-    private RectangularObject frontier;
+    private Rectangle frontier;
 
-    final double PERCENTCOVERAGE = .05d;
+    final double PERCENTCOVERAGE = .1d;
 
     static int renderCount = 0;
 
@@ -34,7 +34,7 @@ public class Barriers implements Manager, Serializable {
     public Barriers() {
         objects = new ArrayList<>();
         Coordinate screenCenter = new Coordinate(MainCharacter.STARTPOINTX, MainCharacter.STARTPOINTY);
-        frontier = new RectangularObject(-GameState.WIDTH/4 + screenCenter.getX(), GameState.WIDTH/4 + screenCenter.getX(), GameState.HEIGHT/4 + screenCenter.getY(), -GameState.HEIGHT/4 + screenCenter.getY());
+        frontier = new Rectangle(-GameState.WIDTH/4 + screenCenter.getX(), GameState.WIDTH/4 + screenCenter.getX(), GameState.HEIGHT/4 + screenCenter.getY(), -GameState.HEIGHT/4 + screenCenter.getY());
     }
 
     //TODO: note that if barriers ever become permanent, there is a performance concern with how the spawn area is expanded
@@ -109,7 +109,7 @@ public class Barriers implements Manager, Serializable {
 
         num += (roundedChance >= GameState.RAND.nextInt(100)) ? 1 : 0;
 
-        RectangularObject creationArea = frontier.getAdjacentQuad(d, expansionSize);
+        Rectangle creationArea = frontier.getAdjacentQuad(d, expansionSize);
 
         //System.out.println("creating " + num + " barriers in direction " + d);
         //create barriers
@@ -126,7 +126,7 @@ public class Barriers implements Manager, Serializable {
         //System.out.println("there are currently " + objects.size() + " barriers. Shrinking barries in direction: " + d + " in the amount of " + distance);
         //System.out.println(frontier.toString());
         //System.out.println(Runner.mc.getScreen());
-        RectangularObject toDespawn = frontier.getAdjacentQuad(d, distance);
+        Rectangle toDespawn = frontier.getAdjacentQuad(d, distance);
         //System.out.println("toDespawn: " + toDespawn);
 
         int startingSize = objects.size();
@@ -143,7 +143,7 @@ public class Barriers implements Manager, Serializable {
 
 
     //create num barriers in area
-    private void createBarriers(RectangularObject area, int num) {
+    private void createBarriers(Rectangle area, int num) {
 
         //create new barriers
         for (int i = 0; i < num; i++) {
@@ -159,7 +159,7 @@ public class Barriers implements Manager, Serializable {
         }
     }
 
-    public List<RenderableRectangle> getObjects(RectangularObject r) {
+    public List<RenderableRectangle> getObjects(Rectangle r) {
         List<RenderableRectangle> inArea = new ArrayList<>();
         objects.forEach(b -> {
             if(b.overlapsWith(r)) {
@@ -198,7 +198,7 @@ public class Barriers implements Manager, Serializable {
         return closestBarrier;
     }
 
-    public List<Barrier> getBarriersInRect(RectangularObject r) {
+    public List<Barrier> getBarriersInRect(Rectangle r) {
         List<Barrier> barriers = new ArrayList<>();
 
         objects.forEach(b -> {

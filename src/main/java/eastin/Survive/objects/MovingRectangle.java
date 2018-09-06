@@ -21,23 +21,23 @@ public class MovingRectangle extends RenderableRectangle {
     }
 
     //moves rectangle in direction d by distance, unless it hits an obstacle. Returns impacted obstacle
-    public RectangularObject move(Direction direction, int distance, List<? extends RectangularObject> obstacles) {
+    public Rectangle move(Direction direction, int distance, List<? extends Rectangle> obstacles) {
 
         //System.out.println("moving mc. current quad: " + toString());
         //System.out.println(direction);
 
-        RectangularObject sim = simulateUnhinderedMovement(direction, distance);
+        Rectangle sim = simulateUnhinderedMovement(direction, distance);
 
         //System.out.println("sim: " + sim.toString());
 
-        RectangularObject affectedArea = createEnclosingRect(sim);
+        Rectangle affectedArea = createEnclosingRect(sim);
 
         //System.out.println("affected area: "  + affectedArea.toString());
 
-        RectangularObject collisionObject = null;
+        Rectangle collisionObject = null;
 
         //note need to go through all objects even if find one that overlaps; could overlap with multiple and need "first" object collision
-        for(RectangularObject object:obstacles){
+        for(Rectangle object:obstacles){
             if(affectedArea.overlapsWith(object)){
 
                 //System.out.println("collision detected: " + object.toString());
@@ -67,14 +67,14 @@ public class MovingRectangle extends RenderableRectangle {
         return collisionObject;
     }
 
-    public RectangularObject move(Coordinate diff, List<? extends RectangularObject> interactables) {
+    public Rectangle move(Coordinate diff, List<? extends Rectangle> interactables) {
 
         if(World.world.printFloat) {
             System.out.println("movement vector " + diff.toString());
         }
 
-        RectangularObject collisionObject = null;
-        RectangularObject next;
+        Rectangle collisionObject = null;
+        Rectangle next;
 
         if(yMovementCollides(diff, interactables)) {
             if(World.world.printFloat) {
@@ -106,9 +106,9 @@ public class MovingRectangle extends RenderableRectangle {
         return collisionObject;
     }
 
-    protected RectangularObject moveY(Coordinate diff, List<? extends RectangularObject> interactables) {
+    protected Rectangle moveY(Coordinate diff, List<? extends Rectangle> interactables) {
 
-        RectangularObject collisionObject = null;
+        Rectangle collisionObject = null;
 
         if(diff.getY() > 0) {
             collisionObject = move(Direction.NORTH, diff.getY(), interactables);
@@ -119,9 +119,9 @@ public class MovingRectangle extends RenderableRectangle {
         return collisionObject;
     }
 
-    protected RectangularObject moveX(Coordinate diff, List<? extends RectangularObject> interactables) {
+    protected Rectangle moveX(Coordinate diff, List<? extends Rectangle> interactables) {
 
-        RectangularObject collisionObject = null;
+        Rectangle collisionObject = null;
 
         if(diff.getX() > 0) {
             collisionObject = move(Direction.EAST, diff.getX(), interactables);
@@ -132,8 +132,8 @@ public class MovingRectangle extends RenderableRectangle {
         return collisionObject;
     }
 
-    protected boolean yMovementCollides(Coordinate diff, List<? extends RectangularObject> interactables) {
-        RectangularObject next = null;
+    protected boolean yMovementCollides(Coordinate diff, List<? extends Rectangle> interactables) {
+        Rectangle next = null;
         MovingRectangle simulation = new MovingRectangle(this);
 
         if(diff.getY() > 0) {
@@ -151,25 +151,25 @@ public class MovingRectangle extends RenderableRectangle {
         return false;
     }
 
-    public RectangularObject simulateUnhinderedMovement(Direction direction, int distance) {
+    public Rectangle simulateUnhinderedMovement(Direction direction, int distance) {
 
         if(direction == Direction.NORTH){
-            return new RectangularObject(leftBound, rightBound, upperBound + distance, lowerBound + distance);
+            return new Rectangle(leftBound, rightBound, upperBound + distance, lowerBound + distance);
         }
         else if(direction == Direction.SOUTH){
-            return new RectangularObject(leftBound, rightBound, upperBound - distance, lowerBound - distance);
+            return new Rectangle(leftBound, rightBound, upperBound - distance, lowerBound - distance);
         }
         else if(direction == Direction.WEST){
-            return new RectangularObject(leftBound - distance, rightBound - distance, upperBound, lowerBound);
+            return new Rectangle(leftBound - distance, rightBound - distance, upperBound, lowerBound);
         }
         else if(direction == Direction.EAST){
-            return new RectangularObject(leftBound + distance, rightBound + distance, upperBound, lowerBound);
+            return new Rectangle(leftBound + distance, rightBound + distance, upperBound, lowerBound);
         }
 
         return null;
     }
 
-    public RectangularObject seek(Coordinate target, double distance, List<? extends RectangularObject> interactables) {
+    public Rectangle seek(Coordinate target, double distance, List<? extends Rectangle> interactables) {
         //System.out.println("target: " + target.toString());
         //System.out.println("center: " + getCenter());
         Coordinate diff = Coordinate.difference(target, getBottomLeft());

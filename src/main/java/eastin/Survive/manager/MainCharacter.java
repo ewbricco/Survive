@@ -5,7 +5,7 @@ import eastin.Survive.World;
 import eastin.Survive.objects.Enemy;
 import eastin.Survive.objects.Item;
 import eastin.Survive.objects.MovingRectangle;
-import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.objects.Rectangle;
 import eastin.Survive.utils.*;
 
 import java.util.ArrayList;
@@ -18,23 +18,24 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class MainCharacter extends MovingRectangle implements Manager {
 
-    private final static int WIDTH = 41;
-    private final static int HEIGHT = 41;
+    private final static int WIDTH = 80;
+    private final static int HEIGHT = 80;
     public final static int STARTPOINTX = GameState.WIDTH/2;
     public final static int STARTPOINTY = GameState.HEIGHT/2;
     private final static Color defaultColor = new Color(0,0,0);
     private final static String GUNSHOT = "gunshot.ogg";
     private final static String RELOAD = "reload.ogg";
     private final static String POWERUP = "powerup.ogg";
+    private ArrayList<Rectangle> damageFrom;
 
     static final int SPEED = 600; //px/s
     private long lastMovement;
     private Direction direction;
     private Direction facing;
+    private Direction lastDirection;
     private int health;
     private boolean firing;
     private long lastFire;
-    private long lastReload;
     private long pausedAt;
     private boolean loaded;
 
@@ -47,8 +48,8 @@ public class MainCharacter extends MovingRectangle implements Manager {
         firing = false;
         lastFire = 0;
         facing = Direction.NORTH;
-        lastReload = 0;
         loaded = true;
+        damageFrom = new ArrayList<>();
     }
 
     public void pause(long time) {
@@ -77,25 +78,21 @@ public class MainCharacter extends MovingRectangle implements Manager {
         }
 
         if(key == GLFW_KEY_W && action == GLFW_PRESS){
-            direction = Direction.NORTH;
-            facing = Direction.NORTH;
+            setDirection(Direction.NORTH);
         } else if(key == GLFW_KEY_S && action == GLFW_PRESS){
-            direction = Direction.SOUTH;
-            facing = Direction.SOUTH;
+            setDirection(Direction.SOUTH);
         } else if(key == GLFW_KEY_A && action == GLFW_PRESS){
-            direction = Direction.WEST;
-            facing = Direction.WEST;
+            setDirection(Direction.WEST);
         } else if(key == GLFW_KEY_D && action == GLFW_PRESS){
-            direction = Direction.EAST;
-            facing = Direction.EAST;
-        } else if(action == GLFW_RELEASE && key == GLFW_KEY_W && direction == Direction.NORTH){
-            direction = null;
-        } else if(action == GLFW_RELEASE && key == GLFW_KEY_S && direction == Direction.SOUTH){
-            direction = null;
-        } else if(action == GLFW_RELEASE && key == GLFW_KEY_D && direction == Direction.EAST){
-            direction = null;
-        } else if(action == GLFW_RELEASE && key == GLFW_KEY_A && direction == Direction.WEST){
-            direction = null;
+            setDirection(Direction.EAST);
+        } else if(action == GLFW_RELEASE && key == GLFW_KEY_W){
+            releaseDirection(Direction.NORTH);
+        } else if(action == GLFW_RELEASE && key == GLFW_KEY_S){
+            releaseDirection(Direction.SOUTH);
+        } else if(action == GLFW_RELEASE && key == GLFW_KEY_D){
+            releaseDirection(Direction.EAST);
+        } else if(action == GLFW_RELEASE && key == GLFW_KEY_A){
+            releaseDirection(Direction.WEST);
         }
 
         else if(key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
@@ -106,6 +103,28 @@ public class MainCharacter extends MovingRectangle implements Manager {
 
 
 
+    }
+
+    private void setDirection(Direction d) {
+        if(lastDirection != direction) {
+            lastDirection = direction;
+        }
+        direction = d;
+        facing = d;
+    }
+
+    private void releaseDirection(Direction d) {
+        if(direction == d) {
+            direction = null;
+            if(lastDirection != null) {
+                direction = lastDirection;
+                facing = lastDirection;
+                lastDirection = null;
+            }
+        }
+        if(lastDirection == d) {
+            lastDirection = null;
+        }
     }
 
     private void fireProjectile() {
@@ -123,9 +142,11 @@ public class MainCharacter extends MovingRectangle implements Manager {
         int movementDistance = (int)(SPEED * ((double)(System.nanoTime()/1000000 - lastMovement) / 1000d));
         lastMovement = System.nanoTime() / 1000000;
 
-
+        if(direction == null && lastDirection != null) {
+            direction = lastDirection;
+        }
         if(direction != null) {
-            List<RectangularObject> interactables = new ArrayList<>();
+            List<Rectangle> interactables = new ArrayList<>();
             interactables.addAll(World.world.barriers.getObjects());
             interactables.addAll(World.world.enemies.getObjects());
             interactables.addAll(World.world.items.getObjects());
@@ -142,36 +163,42 @@ public class MainCharacter extends MovingRectangle implements Manager {
 
         if(!loaded && System.currentTimeMillis() - lastFire > RELOADOFFSET) {
             reload();
-            lastReload = System.currentTimeMillis();
         }
     }
 
 
 
-    private void handleCollision(RectangularObject object) {
+    private void handleCollision(Rectangle object) {
         if(object instanceof Enemy) {
             Enemy enemy = ((Enemy)object);
             if(!enemy.dead) {
-                enemy.takeDamage(1);
-                takeDamage(1);
+                enemy.takeDamage(1, true);
+                takeDamage(1, object);
             }
         } else if(object instanceof Item) {
-            ((Item)object).toDespawn = true;
+            ((Item)object).despawn();
             TIMEBETWEENFIRING /= 2;
             World.world.sounds.playSound(POWERUP);
         }
     }
 
     //area representing screen
-    public RectangularObject getScreen() {
-        return new RectangularObject(getLeftBound() - GameState.WIDTH/2 + WIDTH/2, getRightBound() + GameState.WIDTH/2 - WIDTH/2, getUpperBound() + GameState.HEIGHT/2 - HEIGHT/2, getLowerBound() - GameState.HEIGHT/2 + HEIGHT/2);
+    public Rectangle getScreen() {
+        return new Rectangle(getLeftBound() - GameState.WIDTH/2 + WIDTH/2, getRightBound() + GameState.WIDTH/2 - WIDTH/2, getUpperBound() + GameState.HEIGHT/2 - HEIGHT/2, getLowerBound() - GameState.HEIGHT/2 + HEIGHT/2);
     }
 
-    public void takeDamage(int damage) {
+    public void takeDamage(int damage, Rectangle enemy) {
+        if(damageFrom.contains(enemy)) {
+            return;
+        }
+
         health -= damage;
+
+        damageFrom.add(enemy);
 
         if(health <= 0) {
             System.out.println("****YOU'RE DEAD****");
+            System.out.println("score: " + Enemy.killCount);
             System.exit(0);
         }
     }

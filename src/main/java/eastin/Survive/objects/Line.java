@@ -48,7 +48,7 @@ public class Line extends Entity {
     }
 
 
-    public boolean overlapsWith(RectangularObject r) {
+    public boolean overlapsWith(Rectangle r) {
 
         if(!r.overlapsWith(getEnclosingRect())) {
             return false;
@@ -91,8 +91,8 @@ public class Line extends Entity {
 
     @Override
     public boolean overlapsWith(Entity e) {
-        if(e instanceof RectangularObject) {
-            return overlapsWith((RectangularObject) e);
+        if(e instanceof Rectangle) {
+            return overlapsWith((Rectangle) e);
         } else {
             return false;
         }
@@ -108,8 +108,8 @@ public class Line extends Entity {
         return intercept;
     }
 
-    public RectangularObject getEnclosingRect() {
-        return new RectangularObject(Math.min(s.getX(), t.getX()), Math.max(s.getX(), t.getX()), Math.max(s.getY(), t.getY()), Math.min(s.getY(), t.getY()));
+    public Rectangle getEnclosingRect() {
+        return new Rectangle(Math.min(s.getX(), t.getX()), Math.max(s.getX(), t.getX()), Math.max(s.getY(), t.getY()), Math.min(s.getY(), t.getY()));
     }
 
     public void rotateAboutPoint(Coordinate c, double angle) {

@@ -1,6 +1,6 @@
 package eastin.Survive;
 
-import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.objects.Rectangle;
 import org.junit.Test;
 
 import java.io.File;
@@ -20,7 +20,7 @@ public class WorldTest {
 
         world.mc.checkInput(GLFW_KEY_D, GLFW_PRESS);
 
-        RectangularObject start = world.mc.getScreen();
+        Rectangle start = world.mc.getScreen();
         world.update();
         world.update();
         world.update();

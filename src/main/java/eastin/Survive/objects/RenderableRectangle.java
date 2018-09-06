@@ -8,7 +8,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by ebricco on 7/26/18.
  */
-public class RenderableRectangle extends RectangularObject {
+public class RenderableRectangle extends Rectangle {
     protected Color color;
 
     public RenderableRectangle(int leftBound, int rightBound, int upperBound, int lowerBound, Color color) {
@@ -23,7 +23,7 @@ public class RenderableRectangle extends RectangularObject {
 
     //if any portion of the object is in the screen, render and return true
     public boolean checkPositionAndRender() {
-        RectangularObject screen = World.world.mc.getScreen();
+        Rectangle screen = World.world.mc.getScreen();
 
         if(!this.overlapsWith(screen)) {
             return false;

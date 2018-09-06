@@ -41,7 +41,7 @@ public class LineTest {
     @Test
     public void testOverlapsWithRectangleNotOverlapping() {
         Line l1 = new Line(new Node(0,0), new Node(10,10));
-        RectangularObject r1 = new RectangularObject(5, 10, 2, -2);
+        Rectangle r1 = new Rectangle(5, 10, 2, -2);
 
         assert(!l1.overlapsWith(r1));
         assert(!r1.overlapsWith(l1));
@@ -50,7 +50,7 @@ public class LineTest {
     @Test
     public void testLineThroughMiddle() {
         Line l1 = new Line(new Node(0,0), new Node(0,10));
-        RectangularObject r1 = new RectangularObject(-10, 100, 55, -55);
+        Rectangle r1 = new Rectangle(-10, 100, 55, -55);
 
         assert(l1.overlapsWith(r1));
         assert(r1.overlapsWith(l1));
@@ -59,7 +59,7 @@ public class LineTest {
     @Test
     public void continuedLineRunsThroughRectangle() {
         Line l1 = new Line(new Node(0,0), new Node(10,10));
-        RectangularObject r1 = new RectangularObject(11, 100, 100, -100);
+        Rectangle r1 = new Rectangle(11, 100, 100, -100);
 
         assert(!l1.overlapsWith(r1));
         assert(!r1.overlapsWith(l1));
@@ -68,7 +68,7 @@ public class LineTest {
     @Test
     public void overlappingClose() {
         Line l1 = new Line(new Node(0,0), new Node(10,10));
-        RectangularObject r1 = new RectangularObject(10, 100, 100, -100);
+        Rectangle r1 = new Rectangle(10, 100, 100, -100);
 
         assert(l1.overlapsWith(r1));
         assert(r1.overlapsWith(l1));
@@ -77,7 +77,7 @@ public class LineTest {
     @Test
     public void overlappingDiagonal() {
         Line l1 = new Line(new Node(101,101), new Node(-5,-5));
-        RectangularObject r1 = new RectangularObject(0, 100, 100, 0);
+        Rectangle r1 = new Rectangle(0, 100, 100, 0);
 
         assert(l1.overlapsWith(r1));
         assert(r1.overlapsWith(l1));
@@ -86,7 +86,7 @@ public class LineTest {
     @Test
     public void overlappingRealCase() {
         Line l1 = new Line(new Coordinate(994,249), new Coordinate(1152,169));
-        RectangularObject r1 = new RectangularObject(996, 1151, 326, 171);
+        Rectangle r1 = new Rectangle(996, 1151, 326, 171);
 
         assert(l1.overlapsWith(r1));
         assert(r1.overlapsWith(l1));

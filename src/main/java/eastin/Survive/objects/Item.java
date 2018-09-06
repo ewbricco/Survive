@@ -1,5 +1,6 @@
 package eastin.Survive.objects;
 
+import eastin.Survive.World;
 import eastin.Survive.utils.Color;
 import eastin.Survive.utils.Coordinate;
 
@@ -20,5 +21,9 @@ public class Item extends RenderableRectangle {
     public Item(Coordinate coord) {
         super(coord, SIZE, SIZE, color);
         this.toDespawn = false;
+    }
+
+    public void despawn() {
+        toDespawn = true;
     }
 }

@@ -2,9 +2,7 @@ package eastin.Survive.objects;
 
 import eastin.Survive.utils.*;
 
-import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,7 +10,7 @@ import java.util.Map;
  *
  * aligned with axes
  */
-public class RectangularObject extends Entity {
+public class Rectangle extends Entity {
 
     protected int leftBound;
     protected int rightBound;
@@ -21,11 +19,11 @@ public class RectangularObject extends Entity {
     protected int width;
     protected int height;
 
-    public RectangularObject(RectangularObject r) {
+    public Rectangle(Rectangle r) {
         this(r.getLeftBound(), r.getRightBound(), r.getUpperBound(), r.getLowerBound());
     }
 
-    public RectangularObject(int leftBound, int rightBound, int upperBound, int lowerBound) {
+    public Rectangle(int leftBound, int rightBound, int upperBound, int lowerBound) {
         if(rightBound < leftBound || upperBound < lowerBound) {
             throw new IllegalArgumentException("nonsense bounds");
         }
@@ -39,7 +37,7 @@ public class RectangularObject extends Entity {
     }
 
     //create rectangle with lower left corner coordinate coord
-    public RectangularObject(Coordinate coord, int width, int height)
+    public Rectangle(Coordinate coord, int width, int height)
     {
         leftBound = coord.getX();
         rightBound = coord.getX() + width;
@@ -85,7 +83,7 @@ public class RectangularObject extends Entity {
         return lowerBound;
     }
 
-    public boolean overlapsWith(RectangularObject rect) {
+    public boolean overlapsWith(Rectangle rect) {
 
         boolean axisAlignedWestEast = this.getLeftBound() >= rect.getLeftBound() && this.getLeftBound() <= rect.getRightBound() ||
                 this.getRightBound() >= rect.getLeftBound() && this.getRightBound() <= rect.getRightBound() ||
@@ -103,8 +101,8 @@ public class RectangularObject extends Entity {
     }
 
     public boolean overlapsWith(Entity e) {
-        if(e instanceof RectangularObject) {
-            return overlapsWith((RectangularObject)e);
+        if(e instanceof Rectangle) {
+            return overlapsWith((Rectangle)e);
         } else if(e instanceof Line) {
             return ((Line)e).overlapsWith(this);
         } else if(e instanceof Coordinate) {
@@ -115,13 +113,13 @@ public class RectangularObject extends Entity {
     }
 
     //creates minimum rect that encloses this and given rect
-    public RectangularObject createEnclosingRect(RectangularObject rect) {
+    public Rectangle createEnclosingRect(Rectangle rect) {
         int left = Math.min(this.getLeftBound(), rect.getLeftBound());
         int right = Math.max(this.getRightBound(), rect.getRightBound());
         int up = Math.max(this.getUpperBound(), rect.getUpperBound());
         int down = Math.min(this.getLowerBound(), rect.getLowerBound());
 
-        return new RectangularObject(left, right, up, down);
+        return new Rectangle(left, right, up, down);
     }
 
     public int getWidth() {
@@ -170,15 +168,15 @@ public class RectangularObject extends Entity {
     }
 
     //returns an Areaquad representing a rectangle next to this quad in direction d and size size
-    public RectangularObject getAdjacentQuad(Direction d, int amount) {
+    public Rectangle getAdjacentQuad(Direction d, int amount) {
         if(d == Direction.NORTH) {
-            return new RectangularObject(leftBound, rightBound, upperBound + amount, upperBound);
+            return new Rectangle(leftBound, rightBound, upperBound + amount, upperBound);
         } else if (d == Direction.SOUTH) {
-            return new RectangularObject(leftBound, rightBound, lowerBound, lowerBound - amount);
+            return new Rectangle(leftBound, rightBound, lowerBound, lowerBound - amount);
         } else if (d == Direction.WEST) {
-            return new RectangularObject(leftBound - amount, leftBound, upperBound, lowerBound);
+            return new Rectangle(leftBound - amount, leftBound, upperBound, lowerBound);
         } else if (d == Direction.EAST) {
-            return new RectangularObject(rightBound, rightBound + amount, upperBound, lowerBound);
+            return new Rectangle(rightBound, rightBound + amount, upperBound, lowerBound);
         }
 
         return null;
@@ -205,7 +203,7 @@ public class RectangularObject extends Entity {
         return distances;
     }
 
-    public void setBounds(RectangularObject rect) {
+    public void setBounds(Rectangle rect) {
         leftBound = rect.getLeftBound();
         rightBound = rect.getRightBound();
         upperBound = rect.getUpperBound();
@@ -216,20 +214,20 @@ public class RectangularObject extends Entity {
         return new Coordinate(leftBound + (rightBound-leftBound)/2, lowerBound + (upperBound - lowerBound)/2);
     }
 
-    public boolean equals(RectangularObject r) {
+    public boolean equals(Rectangle r) {
         return this.leftBound == r.getLeftBound() && this.rightBound == r.getRightBound() && this.upperBound == r.getUpperBound() && this.lowerBound == r.getLowerBound();
     }
 
     //creates a rectangle with width centered at coordinate with length going in direction d
-    public static RectangularObject buildRectangleFromPointInDirection(int length, int width, Direction d, Coordinate c) {
+    public static Rectangle buildRectangleFromPointInDirection(int length, int width, Direction d, Coordinate c) {
         if(d == Direction.NORTH) {
-            return new RectangularObject(c.getX() - width/2, c.getX() + width/2, c.getY() + length, c.getY());
+            return new Rectangle(c.getX() - width/2, c.getX() + width/2, c.getY() + length, c.getY());
         } else if(d == Direction.SOUTH) {
-            return new RectangularObject(c.getX() - width/2, c.getX() + width/2, c.getY(), c.getY() - length);
+            return new Rectangle(c.getX() - width/2, c.getX() + width/2, c.getY(), c.getY() - length);
         } else if(d == Direction.WEST) {
-            return new RectangularObject(c.getX() - length, c.getX(), c.getY() + width/2, c.getY() - width/2);
+            return new Rectangle(c.getX() - length, c.getX(), c.getY() + width/2, c.getY() - width/2);
         } else if(d == Direction.EAST) {
-            return new RectangularObject(c.getX(), c.getX() + length, c.getY() + width/2, c.getY() - width/2);
+            return new Rectangle(c.getX(), c.getX() + length, c.getY() + width/2, c.getY() - width/2);
         }
 
         return null;

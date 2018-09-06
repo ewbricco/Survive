@@ -28,7 +28,7 @@ public class Runner {
 
     public static void run(World world, List<DoIf> doifs, EndIf endCondition) {
         try {
-            Sound.initializeAbilityToPlaySound();
+            //Sound.initializeAbilityToPlaySound();
             initGLFW(world);
             initGL();
             loop(world, doifs, endCondition);
@@ -38,6 +38,7 @@ public class Runner {
             glfwTerminate();
             glfwSetErrorCallback(null).free();
             world.destroy();
+            Sound.shutdown();
         }
     }
 

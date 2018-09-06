@@ -26,7 +26,7 @@ public class World implements Serializable {
     public Barriers barriers;
     public Enemies enemies;
     public Projectiles projectiles;
-    public SoundManager sounds;
+    public static SoundManager sounds;
     public Items items;
 
     private List<Manager> managers;

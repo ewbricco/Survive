@@ -4,13 +4,11 @@ import eastin.Survive.GameState;
 import eastin.Survive.World;
 import eastin.Survive.objects.Enemy;
 import eastin.Survive.objects.Line;
-import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.objects.Rectangle;
 import eastin.Survive.utils.*;
-import org.w3c.dom.css.Rect;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.glLineWidth;
@@ -30,7 +28,7 @@ public class Enemies implements Manager, Serializable {
     public final int SIZE = 60;
     private final Color COLOR = new Color(.88f, .1f,.88f);
     private final long TIMEBETWEENNAVREFRESH = 1000;
-    private long lastNavRefresh;
+    public long lastNavRefresh;
     private long pausedAt;
 
     private static final Coordinate STARTINGPOSITION = new Coordinate(250, 450);
@@ -40,6 +38,8 @@ public class Enemies implements Manager, Serializable {
         //objects.add(new Enemy(STARTINGPOSITION.getX(), STARTINGPOSITION.getX() + SIZE, STARTINGPOSITION.getY() + SIZE, STARTINGPOSITION.getY(), COLOR));
         lastSpawn = 0;
         lastNavRefresh = 0;
+        Enemy.lastSpeedUpdate=System.currentTimeMillis();
+        Enemy.lastHealthUpdate=System.currentTimeMillis();
     }
 
     public List<Enemy> getObjects() {
@@ -64,10 +64,10 @@ public class Enemies implements Manager, Serializable {
     }
 
     //seeks target
-    public void move(RectangularObject target) {
+    public void move(Rectangle target) {
         objects.removeIf(enemy -> enemy.toDespawn);
 
-        List<RectangularObject> interactables = new ArrayList<>();
+        List<Rectangle> interactables = new ArrayList<>();
         interactables.addAll(objects);
         interactables.add(World.world.mc);
         interactables.addAll(World.world.barriers.getObjects());
@@ -125,15 +125,27 @@ public class Enemies implements Manager, Serializable {
     //attempts to reach target
     public void update(){
 
+        if(System.currentTimeMillis() - Enemy.lastSpeedUpdate > Enemy.TIMEBETWEENSPEEDINCREASE) {
+            System.out.println("increasing speed");
+            Enemy.SPEED += 2;
+            Enemy.lastSpeedUpdate = System.currentTimeMillis();
+        }
+
+        if(System.currentTimeMillis() - Enemy.lastHealthUpdate > Enemy.TIMEBETWEENHEALTHINCREASE) {
+            System.out.println("updating health");
+            Enemy.INITIALHEALTH += 1;
+            Enemy.lastHealthUpdate = System.currentTimeMillis();
+        }
+
         if(System.currentTimeMillis() - lastNavRefresh > TIMEBETWEENNAVREFRESH && objects.size() > 0) {
             int buffer = (int)TIMEBETWEENNAVREFRESH/1000 * MainCharacter.SPEED;
-            RectangularObject navArea = World.world.mc.getScreen();
+            Rectangle navArea = World.world.mc.getScreen();
             navArea.expandInAllDirections(buffer);
 
-            List<RectangularObject> interactables = new ArrayList<>();
+            List<Rectangle> interactables = new ArrayList<>();
             interactables.addAll(World.world.barriers.getBarriersInRect(navArea));
             interactables.addAll(World.world.items.getItemsInRect(navArea));
-            nav = new NavMesh(new RectangularObject(0, SIZE, SIZE, 0), interactables);
+            nav = new NavMesh(new Rectangle(0, SIZE, SIZE, 0), interactables);
             lastNavRefresh = System.currentTimeMillis();
         }
 

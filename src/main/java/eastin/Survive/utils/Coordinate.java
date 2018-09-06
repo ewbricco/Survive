@@ -1,7 +1,7 @@
 package eastin.Survive.utils;
 
 import eastin.Survive.objects.Entity;
-import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.objects.Rectangle;
 
 import java.io.Serializable;
 
@@ -132,7 +132,7 @@ public class Coordinate extends Entity implements Serializable {
         return 0d;
     }
 
-    public boolean overlapsWith(RectangularObject r) {
+    public boolean overlapsWith(Rectangle r) {
         if(x >= r.getLeftBound() && x <= r.getRightBound() && y <= r.getUpperBound() && y >= r.getLowerBound()) {
             return true;
         }
@@ -143,8 +143,8 @@ public class Coordinate extends Entity implements Serializable {
     public boolean overlapsWith(Entity e) {
         if(e instanceof Coordinate) {
             return equals(e);
-        } else if(e instanceof RectangularObject) {
-            return overlapsWith((RectangularObject)e);
+        } else if(e instanceof Rectangle) {
+            return overlapsWith((Rectangle)e);
         }
 
         return false;

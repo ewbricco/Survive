@@ -3,7 +3,7 @@ package eastin.Survive.manager;
 import eastin.Survive.GameState;
 import eastin.Survive.World;
 import eastin.Survive.objects.Item;
-import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.objects.Rectangle;
 import eastin.Survive.objects.RenderableRectangle;
 import eastin.Survive.utils.Coordinate;
 import eastin.Survive.utils.Direction;
@@ -18,13 +18,13 @@ import java.util.Map;
 public class Items implements Manager {
 
     public List<Item> objects;
-    private RectangularObject frontier;
+    private Rectangle frontier;
     final double PERCENTCOVERAGE = .01d;
 
     public Items() {
         objects = new ArrayList<>();
         Coordinate screenCenter = new Coordinate(MainCharacter.STARTPOINTX, MainCharacter.STARTPOINTY);
-        frontier = new RectangularObject(-GameState.WIDTH/4 + screenCenter.getX(), GameState.WIDTH/4 + screenCenter.getX(), GameState.HEIGHT/4 + screenCenter.getY(), -GameState.HEIGHT/4 + screenCenter.getY());
+        frontier = new Rectangle(-GameState.WIDTH/4 + screenCenter.getX(), GameState.WIDTH/4 + screenCenter.getX(), GameState.HEIGHT/4 + screenCenter.getY(), -GameState.HEIGHT/4 + screenCenter.getY());
     }
 
     public void render() {
@@ -34,7 +34,11 @@ public class Items implements Manager {
     }
 
     public void update() {
+        int initialSize = objects.size();
         objects.removeIf(i -> i.toDespawn);
+        if(objects.size() != initialSize) {
+            World.world.enemies.lastNavRefresh = 0;
+        }
         modifyFrontiers(frontier.getDistancesToPoint(World.world.mc.getCenter()));
     }
 
@@ -69,7 +73,7 @@ public class Items implements Manager {
 
         num += (roundedChance >= GameState.RAND.nextInt(100)) ? 1 : 0;
 
-        RectangularObject creationArea = frontier.getAdjacentQuad(d, expansionSize);
+        Rectangle creationArea = frontier.getAdjacentQuad(d, expansionSize);
 
         createItems(creationArea, num);
 
@@ -78,7 +82,7 @@ public class Items implements Manager {
 
     private void shrinkFrontier(Direction d, int distance) {
 
-        RectangularObject toDespawn = frontier.getAdjacentQuad(d, distance);
+        Rectangle toDespawn = frontier.getAdjacentQuad(d, distance);
 
         objects.removeIf(object -> object.overlapsWith(toDespawn));
 
@@ -86,13 +90,13 @@ public class Items implements Manager {
     }
 
     //create num items in area
-    private void createItems(RectangularObject area, int num) {
+    private void createItems(Rectangle area, int num) {
         for (int i = 0; i < num; i++) {
             newItem(area);
         }
     }
 
-    public void newItem(RectangularObject area) {
+    public void newItem(Rectangle area) {
 
         int retryAttempts = 5;
 
@@ -114,7 +118,7 @@ public class Items implements Manager {
         }
     }
 
-    public List<Item> getItemsInRect(RectangularObject r) {
+    public List<Item> getItemsInRect(Rectangle r) {
         List<Item> items = new ArrayList<>();
 
         objects.forEach(i -> {

@@ -3,7 +3,7 @@ package eastin.Survive.utils;
 import eastin.Survive.World;
 import eastin.Survive.objects.Edge;
 import eastin.Survive.objects.Line;
-import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.objects.Rectangle;
 
 import java.io.Serializable;
 import java.util.*;
@@ -21,20 +21,20 @@ import static org.lwjgl.opengl.GL11.glLineWidth;
 public class NavMesh implements Serializable {
 
     //rects where the bottom left of mover can't be
-    private List<RectangularObject> constraints;
+    private List<Rectangle> constraints;
 
     private List<Node> nodes;
 
     //target coordinate should be bottom left of its rect
     //maybe shouldn't include s and t in constructor to reuse nav mesh aslong as obstancles don't change
-    public NavMesh(RectangularObject mover, List<? extends RectangularObject> obstacles) {
+    public NavMesh(Rectangle mover, List<? extends Rectangle> obstacles) {
 
         constraints = new ArrayList<>();
         nodes = new ArrayList<>();
 
-        for(RectangularObject r:obstacles) {
+        for(Rectangle r:obstacles) {
 
-            RectangularObject constraint = new RectangularObject(r.getLeftBound() - mover.getWidth() + 1, r.getRightBound(), r.getUpperBound(), r.getLowerBound() - mover.getHeight() + 1);
+            Rectangle constraint = new Rectangle(r.getLeftBound() - mover.getWidth() + 1, r.getRightBound(), r.getUpperBound(), r.getLowerBound() - mover.getHeight() + 1);
             constraints.add(constraint);
 
             int temp = 0;
@@ -69,7 +69,7 @@ public class NavMesh implements Serializable {
                     //TODO stop separate lines from being checked for n1 -> n2 and n2 -> n1
                     Edge edge = new Edge(m, n);
                     boolean overlaps = false;
-                    for(RectangularObject r:constraints) {
+                    for(Rectangle r:constraints) {
                         if(edge.overlapsWith(r)) {
                             overlaps = true;
                         }
@@ -95,7 +95,7 @@ public class NavMesh implements Serializable {
         edge.setTemporary(temporary);
 
         boolean overlaps = false;
-        for(RectangularObject r:constraints) {
+        for(Rectangle r:constraints) {
             if(edge.overlapsWith(r)) {
                 overlaps = true;
             }
@@ -250,11 +250,11 @@ public class NavMesh implements Serializable {
         }
     }
 
-    public List<Coordinate> getPath(RectangularObject mover, RectangularObject target) {
+    public List<Coordinate> getPath(Rectangle mover, Rectangle target) {
         Coordinate bottomLeft = target.getBottomLeft();
 
         boolean possible = true;
-        for(RectangularObject r:constraints) {
+        for(Rectangle r:constraints) {
             if (bottomLeft.overlapsWith(r)) {
                 possible = false;
                 break;

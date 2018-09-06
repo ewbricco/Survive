@@ -4,13 +4,12 @@ import eastin.Survive.Runner;
 import eastin.Survive.World;
 import eastin.Survive.objects.Barrier;
 import eastin.Survive.objects.Enemy;
-import eastin.Survive.objects.RectangularObject;
+import eastin.Survive.objects.Rectangle;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * Created by ebricco on 8/7/18.
@@ -19,18 +18,18 @@ public class NavMeshTest {
 
     @Test
     public void timeTest() {
-        RectangularObject r1 = new RectangularObject(0, 10, 10, 0);
-        RectangularObject r2 = new RectangularObject(5, 15, 30, 20);
-        RectangularObject r3 = new RectangularObject(30, 40, 25, 15);
-        RectangularObject r4 = new RectangularObject(100, 110, 10, -10);
-        RectangularObject r5 = new RectangularObject(50, 60, 100, 90);
-        RectangularObject r6 = new RectangularObject(-500, -400, -500, -600);
-        RectangularObject r7 = new RectangularObject(-200, -50, 15, -67);
+        Rectangle r1 = new Rectangle(0, 10, 10, 0);
+        Rectangle r2 = new Rectangle(5, 15, 30, 20);
+        Rectangle r3 = new Rectangle(30, 40, 25, 15);
+        Rectangle r4 = new Rectangle(100, 110, 10, -10);
+        Rectangle r5 = new Rectangle(50, 60, 100, 90);
+        Rectangle r6 = new Rectangle(-500, -400, -500, -600);
+        Rectangle r7 = new Rectangle(-200, -50, 15, -67);
 
-        ArrayList<RectangularObject> obstacles = new ArrayList<>();
+        ArrayList<Rectangle> obstacles = new ArrayList<>();
         obstacles.addAll(Arrays.asList(r1, r2, r3, r4, r5, r6, r7));
 
-        RectangularObject mover = new RectangularObject(100, 105, 105, 100);
+        Rectangle mover = new Rectangle(100, 105, 105, 100);
 
         long start = System.currentTimeMillis();
         for(int i=0; i<100; i++) {
@@ -54,13 +53,13 @@ public class NavMeshTest {
 
     @Test
     public void testNumberOfEdges2() {
-        RectangularObject r1 = new RectangularObject(0, 100, 100, 0);
-        RectangularObject r2 = new RectangularObject(1000, 2000, 2000, 1000);
+        Rectangle r1 = new Rectangle(0, 100, 100, 0);
+        Rectangle r2 = new Rectangle(1000, 2000, 2000, 1000);
 
-        ArrayList<RectangularObject> obstacles = new ArrayList<>();
+        ArrayList<Rectangle> obstacles = new ArrayList<>();
         obstacles.addAll(Arrays.asList(r1, r2));
 
-        RectangularObject mover = new RectangularObject(100, 105, 105, 100);
+        Rectangle mover = new Rectangle(100, 105, 105, 100);
 
 
         NavMesh mesh = new NavMesh(mover, obstacles);
@@ -70,15 +69,15 @@ public class NavMeshTest {
 
     @Test
     public void testPathBasic() {
-        RectangularObject r1 = new RectangularObject(0, 100, 100, 0);
-        RectangularObject r2 = new RectangularObject(200, 300, 300, 200);
+        Rectangle r1 = new Rectangle(0, 100, 100, 0);
+        Rectangle r2 = new Rectangle(200, 300, 300, 200);
 
-        RectangularObject mover = new RectangularObject(-100, -95, -100, -105);
+        Rectangle mover = new Rectangle(-100, -95, -100, -105);
 
         Node s = new Node(-100, -100);
         Node t = new Node(500, 500);
 
-        ArrayList<RectangularObject> obstacles = new ArrayList<>();
+        ArrayList<Rectangle> obstacles = new ArrayList<>();
         obstacles.addAll(Arrays.asList(r1, r2));
 
         NavMesh mesh = new NavMesh(mover, obstacles);
@@ -99,7 +98,7 @@ public class NavMeshTest {
 
         world.enemies.getObjects().add(world.enemies.getEnemy(new Coordinate(5430, 688)));
 
-        world.mc.setBounds(new RectangularObject(6272, 6313, 575, 534));
+        world.mc.setBounds(new Rectangle(6272, 6313, 575, 534));
 
         Runner.DoIf doif = new Runner.RunEveryNth(30, () -> {
             if(world.enemies.getObjects().size() > 0) {
@@ -124,7 +123,7 @@ public class NavMeshTest {
 
         world.enemies.objects.add(world.enemies.getEnemy(new Coordinate(2000, 160)));
 
-        world.mc.setBounds(new RectangularObject(1013, 1054, 309, 268));
+        world.mc.setBounds(new Rectangle(1013, 1054, 309, 268));
 
         Runner.DoIf doif = new Runner.RunEveryNth(30, () -> {
             /*if(world.enemies.getObjects().size() > 0) {
@@ -159,7 +158,7 @@ public class NavMeshTest {
 
         world.enemies.objects.add(world.enemies.getEnemy(new Coordinate(2100, 839)));
 
-        world.mc.setBounds(new RectangularObject(1601, 1642, 1544, 1503));
+        world.mc.setBounds(new Rectangle(1601, 1642, 1544, 1503));
 
         Runner.DoIf doif = new Runner.RunEveryNth(30, () -> {
             /*if(world.enemies.getObjects().size() > 0) {
@@ -189,7 +188,7 @@ public class NavMeshTest {
 
         world.enemies.objects.add(world.enemies.getEnemy(new Coordinate(40, 700)));
 
-        world.mc.setBounds(new RectangularObject(40, 81, -100, -141));
+        world.mc.setBounds(new Rectangle(40, 81, -100, -141));
 
         Runner.DoIf doif = new Runner.RunEveryNth(30, () -> {
             /*if(world.enemies.getObjects().size() > 0) {
@@ -210,14 +209,14 @@ public class NavMeshTest {
 
     @Test
     public void testPathForUnnecessaryClingingToBarriers() {
-        RectangularObject r1 = new RectangularObject(0, 100, 100, 0);
+        Rectangle r1 = new Rectangle(0, 100, 100, 0);
 
-        RectangularObject mover = new RectangularObject(0, 10, -10, -20);
+        Rectangle mover = new Rectangle(0, 10, -10, -20);
 
         Node s = new Node(mover.getBottomLeft());
         Node t = new Node(500, -20);
 
-        ArrayList<RectangularObject> obstacles = new ArrayList<>();
+        ArrayList<Rectangle> obstacles = new ArrayList<>();
         obstacles.addAll(Arrays.asList(r1));
 
         NavMesh mesh = new NavMesh(mover, obstacles);

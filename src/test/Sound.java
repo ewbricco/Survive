@@ -1,5 +1,3 @@
-package test;
-
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
@@ -23,22 +21,17 @@ import static org.lwjgl.system.libc.Stdlib.free;
  */
 public class Sound {
 
+    static long context;
+    static long device;
+    static List<Pointers> pointers;
+
     public static void main(String[] args) {
-        //Initialization
-        String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
-        long device = alcOpenDevice(defaultDeviceName);
-
-        int[] attributes = {0};
-        long context = alcCreateContext(device, attributes);
-        alcMakeContextCurrent(context);
-
-        ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
-        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
-
 
         String fileName = "reload.ogg";
 
-        List<Pointers> pointers = new ArrayList<>();
+        pointers = new ArrayList<>();
+
+        initialize();
 
         /*long start = System.currentTimeMillis();
         for(int i=0; i<100; i++) {
@@ -51,13 +44,55 @@ public class Sound {
         }
         System.out.println(System.currentTimeMillis() - start);*/
 
-        playSound(fileName);
+        for(int i=0; i<256; i++) {
+            System.out.println(i);
+            playSound(fileName);
+            try {
+                //Wait for a second
+                Thread.sleep(10);
+            } catch(InterruptedException ex) {}
+        }
+
+        long start = System.currentTimeMillis();
+        reinitialize();
+        System.out.println("time: " + (System.currentTimeMillis() - start));
+
+        for(int i=0; i<256; i++) {
+            System.out.println(i);
+            playSound(fileName);
+            try {
+                //Wait for a second
+                Thread.sleep(10);
+            } catch(InterruptedException ex) {}
+        }
+
+        end();
 
         try {
             //Wait for a second
             Thread.sleep(3000);
         } catch(InterruptedException ex) {}
+    }
 
+    public static void initialize() {
+        //Initialization
+        String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+        device = alcOpenDevice(defaultDeviceName);
+
+        int[] attributes = {0};
+        context = alcCreateContext(device, attributes);
+        alcMakeContextCurrent(context);
+
+        ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
+        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+    }
+
+    public static void reinitialize() {
+        ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
+        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+    }
+
+    public static void end() {
         pointers.forEach(p -> p.delete());
 
         alcDestroyContext(context);

@@ -22,7 +22,7 @@ public class Projectile extends MovingRectangle {
     private long lastMovement;
     public boolean toDespawn;
 
-    private Projectile(Direction d, RectangularObject r) {
+    private Projectile(Direction d, Rectangle r) {
         super(r.getLeftBound(), r.getRightBound(), r.getUpperBound(), r.getLowerBound(), COLOR);
 
         this.direction = d;
@@ -39,7 +39,7 @@ public class Projectile extends MovingRectangle {
         int movementDistance = (int)((System.currentTimeMillis() - lastMovement)*SPEED)/1000;
         lastMovement = System.currentTimeMillis();
 
-        List<RectangularObject> interactables = new ArrayList<>();
+        List<Rectangle> interactables = new ArrayList<>();
 
         World.world.barriers.getObjects().forEach(b -> interactables.add(b));
         World.world.enemies.getObjects().forEach(e -> interactables.add(e));
@@ -51,14 +51,16 @@ public class Projectile extends MovingRectangle {
     }
 
     public static Projectile newProjectileFromLaunchPoint(Direction d, Coordinate launchPoint) {
-        return new Projectile(d, RectangularObject.buildRectangleFromPointInDirection(LENGTH, WIDTH, d, launchPoint));
+        return new Projectile(d, Rectangle.buildRectangleFromPointInDirection(LENGTH, WIDTH, d, launchPoint));
     }
 
-    private void handleCollision(RectangularObject object) {
+    private void handleCollision(Rectangle object) {
         if(object instanceof Enemy) {
             ((Enemy)object).takeDamage(1);
             toDespawn = true;
         } else if(object instanceof Barrier) {
+            toDespawn = true;
+        } else if(object instanceof Item) {
             toDespawn = true;
         }
     }

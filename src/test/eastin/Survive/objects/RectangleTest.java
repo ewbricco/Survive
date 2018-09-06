@@ -1,6 +1,5 @@
 package eastin.Survive.objects;
 
-import eastin.Survive.objects.RectangularObject;
 import eastin.Survive.utils.Coordinate;
 import eastin.Survive.utils.Direction;
 import org.junit.Test;
@@ -10,12 +9,12 @@ import java.util.Map;
 /**
  * Created by ebricco on 7/26/18.
  */
-public class RectangularObjectTest {
+public class RectangleTest {
 
     @Test
     public void testOverlapsWithNonOverlapping() {
-        RectangularObject rect1 = new RectangularObject(727,1073,149,-197);
-        RectangularObject rect2 = new RectangularObject(1254,1336,841,759);
+        Rectangle rect1 = new Rectangle(727,1073,149,-197);
+        Rectangle rect2 = new Rectangle(1254,1336,841,759);
 
         assert(!rect1.overlapsWith(rect2));
         assert(!rect2.overlapsWith(rect1));
@@ -23,8 +22,8 @@ public class RectangularObjectTest {
 
     @Test
     public void testOverlapsWithNonOverlappingClose() {
-        RectangularObject rect1 = new RectangularObject(0,10,10,0);
-        RectangularObject rect2 = new RectangularObject(11,15,10,0);
+        Rectangle rect1 = new Rectangle(0,10,10,0);
+        Rectangle rect2 = new Rectangle(11,15,10,0);
 
         assert(!rect1.overlapsWith(rect2));
         assert(!rect2.overlapsWith(rect1));
@@ -32,8 +31,8 @@ public class RectangularObjectTest {
 
     @Test
     public void testOverlapsWithOverlappingTotalEnclosure() {
-        RectangularObject rect1 = new RectangularObject(0,1000,1000,0);
-        RectangularObject rect2 = new RectangularObject(10,50,50,10);
+        Rectangle rect1 = new Rectangle(0,1000,1000,0);
+        Rectangle rect2 = new Rectangle(10,50,50,10);
 
         assert(rect1.overlapsWith(rect2));
         assert(rect2.overlapsWith(rect1));
@@ -42,8 +41,8 @@ public class RectangularObjectTest {
 
     @Test
     public void testOverlapsWithOverlappingPartial() {
-        RectangularObject rect1 = new RectangularObject(0,1000,1000,0);
-        RectangularObject rect2 = new RectangularObject(500,1010,1010,500);
+        Rectangle rect1 = new Rectangle(0,1000,1000,0);
+        Rectangle rect2 = new Rectangle(500,1010,1010,500);
 
         assert(rect1.overlapsWith(rect2));
         assert(rect2.overlapsWith(rect1));
@@ -51,8 +50,8 @@ public class RectangularObjectTest {
 
     @Test
     public void testOverlapsWithSameTriangle() {
-        RectangularObject rect1 = new RectangularObject(0,1000,1000,0);
-        RectangularObject rect2 = new RectangularObject(0,1000,1000,0);
+        Rectangle rect1 = new Rectangle(0,1000,1000,0);
+        Rectangle rect2 = new Rectangle(0,1000,1000,0);
 
         assert(rect1.overlapsWith(rect2));
         assert(rect2.overlapsWith(rect1));
@@ -60,8 +59,8 @@ public class RectangularObjectTest {
 
     @Test
     public void testOnePixelLineOverlap() {
-        RectangularObject rect1 = new RectangularObject(0,1000,1000,0);
-        RectangularObject rect2 = new RectangularObject(1000,1002,1000,0);
+        Rectangle rect1 = new Rectangle(0,1000,1000,0);
+        Rectangle rect2 = new Rectangle(1000,1002,1000,0);
 
         assert(rect1.overlapsWith(rect2));
         assert(rect2.overlapsWith(rect1));
@@ -69,7 +68,7 @@ public class RectangularObjectTest {
 
     @Test
     public void testDistancesToPonint() {
-        RectangularObject rect1 = new RectangularObject(-3700, 8870, 5820, -4180);
+        Rectangle rect1 = new Rectangle(-3700, 8870, 5820, -4180);
 
         Map<Direction, Integer> distances =  rect1.getDistancesToPoint(new Coordinate(2830, 715));
 
