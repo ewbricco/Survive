@@ -25,7 +25,7 @@ public final class EasyFont extends FontDemo {
         String filePath;
         if (args.length == 0) {
             System.out.println("Use 'ant demo -Dclass=org.lwjgl.demo.stb.EasyFont -Dargs=<path>' to load a different text file (must be UTF8-encoded).\n");
-            filePath = "doc/README.md";
+            filePath = "README.md";
         } else {
             filePath = args[0];
         }
