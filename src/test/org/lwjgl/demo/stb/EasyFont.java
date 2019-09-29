@@ -35,9 +35,10 @@ public final class EasyFont extends FontDemo {
 
     @Override
     protected void loop() {
+        String text = "Ammo: 57";
         ByteBuffer charBuffer = BufferUtils.createByteBuffer(text.length() * 270);
 
-        int quads = stb_easy_font_print(50, 50, getText(), null, charBuffer);
+        int quads = stb_easy_font_print(500, 500, text, null, charBuffer);
 
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(2, GL_FLOAT, 16, charBuffer);
@@ -50,12 +51,16 @@ public final class EasyFont extends FontDemo {
 
             glClear(GL_COLOR_BUFFER_BIT);
 
+            System.out.println(getScale());
+
             float scaleFactor = 1.0f + getScale() * 0.25f;
 
             glPushMatrix();
             // Zoom
             glScalef(scaleFactor, scaleFactor, 1f);
             // Scroll
+
+            System.out.println(getLineOffset() * getFontHeight());
             glTranslatef(4.0f, 4.0f - getLineOffset() * getFontHeight(), 0f);
 
             glDrawArrays(GL_QUADS, 0, quads * 4);
