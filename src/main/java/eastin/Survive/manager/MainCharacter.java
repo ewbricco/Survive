@@ -33,7 +33,7 @@ public class MainCharacter extends MovingRectangle implements Manager {
     private Direction direction;
     private Direction facing;
     private Direction lastDirection;
-    private int health;
+    public int health;
     private boolean firing;
     private long lastFire;
     private long pausedAt;

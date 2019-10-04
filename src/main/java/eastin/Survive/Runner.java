@@ -91,34 +91,6 @@ public class Runner {
         glDisable(GL_DEPTH_TEST);
     }
 
-    /*
-        Note: this thing uses coordinates with flipped y
-     */
-    public static void renderText() {
-        String text = "Ammo: 57";
-        ByteBuffer charBuffer = BufferUtils.createByteBuffer(text.length() * 270);
-
-        int quads = stb_easy_font_print(10, -GameState.HEIGHT / 3.5f, text, null, charBuffer);
-
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glColor3f(0f, 0f, 0f);
-        glVertexPointer(2, GL_FLOAT, 16, charBuffer);
-
-        float scaleFactor = 1.0f + 10f * 0.25f;
-
-        glPushMatrix();
-        // Zoom
-        glScalef(scaleFactor, -scaleFactor, 1f);
-        // Scroll
-        glTranslatef(4.0f, 4.0f, 0f);
-
-        glDrawArrays(GL_QUADS, 0, quads * 4);
-
-        glPopMatrix();
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-    }
-
     public static void loop(World world, List<DoIf> doifs, EndIf endCondition) {
         GL.createCapabilities();
         glClearColor(.2f,.8f,0f, 0f);
@@ -139,8 +111,6 @@ public class Runner {
             }
 
             world.render();
-
-            renderText();
 
             swapStart = System.currentTimeMillis();
             glfwSwapBuffers(window); // swap the color buffers

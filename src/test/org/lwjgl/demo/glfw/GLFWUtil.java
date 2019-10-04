@@ -1,3 +1,4 @@
+  
 /*
  * Copyright LWJGL. All rights reserved.
  * License terms: https://www.lwjgl.org/license
@@ -7,6 +8,7 @@ package org.lwjgl.demo.glfw;
 import org.lwjgl.glfw.*;
 import org.lwjgl.system.*;
 
+import javax.annotation.*;
 import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;

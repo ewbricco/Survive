@@ -2,13 +2,18 @@ package eastin.Survive;
 
 import eastin.Survive.manager.*;
 import eastin.Survive.manager.MainCharacter;
+import eastin.Survive.objects.Enemy;
 import eastin.Survive.sound.SoundManager;
+import org.lwjgl.BufferUtils;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.*;
 
 import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.stb.STBEasyFont.stb_easy_font_print;
 
 /**
  * Created by ebricco on 8/13/18.
@@ -108,8 +113,37 @@ public class World implements Serializable {
         sounds.update();
     }
 
+    /*
+    Note: this thing uses coordinates with flipped y
+ */
+    public void renderText() {
+        String text = "Health: " + mc.health + "      Score: " +  Enemy.killCount;
+        ByteBuffer charBuffer = BufferUtils.createByteBuffer(text.length() * 270);
+
+        int quads = stb_easy_font_print(10, -GameState.HEIGHT / 3.5f, text, null, charBuffer);
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glColor3f(0f, 0f, 0f);
+        glVertexPointer(2, GL_FLOAT, 16, charBuffer);
+
+        float scaleFactor = 1.0f + 10f * 0.25f;
+
+        glPushMatrix();
+        // Zoom
+        glScalef(scaleFactor, -scaleFactor, 1f);
+        // Scroll
+        glTranslatef(4.0f, 4.0f, 0f);
+
+        glDrawArrays(GL_QUADS, 0, quads * 4);
+
+        glPopMatrix();
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+    }
+
     public void render() {
         managers.forEach(m -> m.render());
+        renderText();
     }
 
     public void pause() {
